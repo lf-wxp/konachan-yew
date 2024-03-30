@@ -4,7 +4,7 @@ use web_sys::HtmlCanvasElement;
 use yew::{function_component, html, use_effect_with, use_node_ref, Html};
 
 use crate::{store::Theme, 
-  utils::style}
+  utils::{style, PointLine}}
 ;
 
 #[function_component]
@@ -16,13 +16,13 @@ pub fn Background() -> Html {
 
   use_effect_with((), move |_| {
     if let Some(canvas) = canvas_ref_clone.cast::<HtmlCanvasElement>() {
+      PointLine::new(canvas, 5, "#ccc".to_string(), "#000".to_string());
     }
   });
 
   html! {
     <div class={class_name}>
       <canvas ref={canvas_ref} class={format!("{theme}")}  />
-      <div class="mask" />
     </div>
   }
 }
@@ -36,14 +36,6 @@ fn get_class_name() -> String {
         position: fixed;
         z-index: -1;
         inset-block: 0;
-        
-        .mask {
-          block-size: 100%;
-          inline-size: 100%;
-          position: absolute;
-          inset-block: 0;
-          backdrop-filter: blur(10px);
-        }
 
         canvas {
           block-size: 100%;

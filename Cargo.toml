@@ -32,6 +32,7 @@ web-sys = {version = "0.3.67", features = [
   "Element",
   "HtmlElement",
   "HtmlCanvasElement",
+  "CanvasRenderingContext2d",
   "Window",
   "Url",
   "Navigator",
