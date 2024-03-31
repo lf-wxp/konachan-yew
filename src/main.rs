@@ -2,7 +2,7 @@ use bounce::BounceRoot;
 use stylist::{self, style};
 use yew::prelude::*;
 
-use components::{Background, Service, Side};
+use components::{Background, Service, Nav};
 use utils::style;
 
 mod components;
@@ -20,7 +20,7 @@ fn App() -> Html {
           <section class={class_name}>
             <Background />
             <div class={"side"}>
-              <Side />
+              <Nav />
             </div>
           </section>
       </BounceRoot>
