@@ -2,10 +2,11 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use gloo_console::log;
-use wasm_bindgen::{JsValue, JsCast};
+use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
+use yew::Event;
 
-use crate::utils::get_dpr;
+use crate::utils::{get_dpr, get_window};
 
 use super::{intersect_2_lines, Flag, Line, Point, Timer};
 
@@ -119,6 +120,19 @@ impl PointLine {
     }
     Ok(())
   }
+  pub fn bind_event(&self) {
+    if let Some(pointline) = &self.this {
+      let pointline = pointline.clone();
+      let window = get_window();
+      let closure = Closure::<dyn Fn(_)>::new(move |_: Event| {
+        pointline.borrow_mut().resize();
+      });
+      window
+        .add_event_listener_with_callback("resize", closure.as_ref().unchecked_ref())
+        .ok();
+      closure.forget();
+    }
+  }
   fn subscribe(&self) {
     if let Some(ribbons) = &self.this {
       let ribbons = ribbons.clone();
@@ -128,6 +142,7 @@ impl PointLine {
     }
   }
   pub fn init(&self) {
+    self.bind_event();
     self.subscribe();
     self.timer.start();
   }

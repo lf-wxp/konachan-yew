@@ -2,7 +2,7 @@ use bounce::BounceRoot;
 use stylist::{self, style};
 use yew::prelude::*;
 
-use components::{Background, Service, Nav};
+use components::{Background, Service, Nav, DynamicWallpaper};
 use utils::style;
 
 mod components;
@@ -19,6 +19,7 @@ fn App() -> Html {
           <Service />
           <section class={class_name}>
             <Background />
+            <DynamicWallpaper />
             <div class={"side"}>
               <Nav />
             </div>
@@ -35,9 +36,8 @@ fn get_class_name() -> String {
         flex-flow: nowrap; 
         inline-size: 100%;
         block-size: 100%;
-
+        --padding: 5px;
         .side {
-          inline-size: 40px; 
           padding: var(--padding);
           backdrop-filter: blur(15px);
           z-index: 1;
