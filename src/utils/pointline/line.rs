@@ -1,5 +1,4 @@
 use super::Point;
-use gloo_console::log;
 use rand::Rng;
 
 fn random_int_from_interval(mn: f32, mx: f32) -> f32 {
@@ -76,7 +75,6 @@ impl Line {
     }
     self.va = random_int_from_interval(25.0, 100.0) / 100.0;
     self.vb = random_int_from_interval(25.0, 100.0) / 100.0;
-    log!("init", self.va, self.vb);
   }
 
   fn edges(&mut self) {

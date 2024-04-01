@@ -3,7 +3,6 @@ use fake::{
   locales::{EN, ZH_CN},
   Dummy, Fake,
 };
-
 pub struct RandomName;
 impl Dummy<RandomName> for String {
   fn dummy_with_rng<R: rand::Rng + ?Sized>(_config: &RandomName, rng: &mut R) -> Self {
@@ -15,3 +14,4 @@ impl Dummy<RandomName> for String {
     }
   }
 }
+

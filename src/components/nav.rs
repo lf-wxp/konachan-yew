@@ -1,12 +1,11 @@
 use bounce::{use_atom, use_atom_value};
 use gloo_console::log;
 use stylist::{self, style};
-use web_sys::HtmlLiElement;
 use yew::prelude::*;
 
 use crate::{
   store::{Page, Total},
-  utils::{get_target, style},
+  utils::style,
 };
 
 const SIZE: u32 = 4;

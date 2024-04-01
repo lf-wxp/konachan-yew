@@ -3,9 +3,10 @@ use stylist::{self, style};
 use web_sys::HtmlCanvasElement;
 use yew::{function_component, html, use_effect_with, use_node_ref, Html};
 
-use crate::{store::Theme, 
-  utils::{style, PointLine}}
-;
+use crate::{
+  store::Theme,
+  utils::{style, PointLine},
+};
 
 #[function_component]
 pub fn DynamicWallpaper() -> Html {
