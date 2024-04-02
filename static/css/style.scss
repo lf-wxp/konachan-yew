@@ -1,0 +1,54 @@
+:root {
+	--theme-base-color: #39cccc;
+	--theme-base-color-rgb: 57, 204, 204;
+	--theme-muted-color: #39cccc;
+
+	--theme-page-nav-bg-color: rgba(0, 0, 0, 0.3);
+	--theme-page-item-size: 36px;
+	--theme-page-item-hover-color: color(var(--theme-base-color) alpha(20%));
+	--theme-page-item-breath-color1: color(var(--theme-base-color) shade(5%));
+	--theme-page-item-breath-color2: color(var(--theme-base-color) shade(10%));
+
+	--theme-list-tool-height: 25px;
+	--theme-list-gap: 10px;
+}
+
+body {
+	block-size: 100vh;
+	inline-size: 100vw;
+	margin-block: 0;
+	margin-inline: 0;
+	overflow: hidden;
+}
+ul {
+	margin: 0;
+	padding: 0;
+}
+li {
+	list-style: none;
+}
+.scroll-bar {
+	&::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+	&::-webkit-scrollbar-thumb {
+		border: 2px solid transparent;
+		background-clip: content-box;
+		background-color: rgba(var(--theme-base-color-rgb), 0.4);
+		border-radius: 15px;
+	}
+}
+* {
+	box-sizing: border-box;
+}
+@font-face {
+	font-family: 'ZagRegular';
+	src: url('./font/ZagRegular.eot?#iefix') format('embedded-opentype'),
+		url('./font/ZagRegular.otf') format('opentype'),
+		url('./font/ZagRegular.woff') format('woff'),
+		url('./font/ZagRegular.ttf') format('truetype'),
+		url('./font/ZagRegular.svg#ZagRegular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}

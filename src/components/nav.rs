@@ -154,11 +154,11 @@ fn get_class_name() -> String {
     r#"
     .bk-pager {
       flex: 0 0 auto;
-      width: calc(3 * var(--themePageItemSize));
-      height: calc(3 * var(--themePageItemSize));
+      width: calc(3 * var(--theme-page-item-size));
+      height: calc(3 * var(--theme-page-item-size));
       position: relative;
       z-index: 2;
-      font-family: 'NanoCore';
+      font-family: ZagRegular;
     }
     
     .bk-pager.active {
@@ -174,19 +174,19 @@ fn get_class_name() -> String {
     }
     
     .bk-pager.active .bk-pager_go .bk-pager_go-div:first-of-type {
-      left: var(--themePageItemSize);
+      left: var(--theme-page-item-size);
       top: 0px;
     }
     
     .bk-pager.active .bk-pager_go .bk-pager_go-div:last-of-type {
-      top: var(--themePageItemSize);
+      top: var(--theme-page-item-size);
       left: 0px;
       transition-delay: 0.1s;
     }
     
     .bk-pager.active .bk-pager_go .bk-pager_btn {
-      top: var(--themePageItemSize);
-      left: var(--themePageItemSize);
+      top: var(--theme-page-item-size);
+      left: var(--theme-page-item-size);
       transition-delay: 0.2s;
     }
     
@@ -201,35 +201,35 @@ fn get_class_name() -> String {
     }
 
     .bk-pager.active .bk-pager_item:nth-child(2) {
-      left: var(--themePageItemSize);
+      left: var(--theme-page-item-size);
       top: 0px;
       transition-delay: 0.1s;
     }
     
     .bk-pager.active .bk-pager_item:nth-child(3) {
       left: 0px;
-      top: var(--themePageItemSize);
+      top: var(--theme-page-item-size);
       transition-delay: 0.2s;
     }
     
     .bk-pager_nav {
-      width: var(--themePageItemSize);
-      height: var(--themePageItemSize);
+      width: var(--theme-page-item-size);
+      height: var(--theme-page-item-size);
       position: absolute;
       display: inline-block;
       color: white;
       font-size: 30px;
       line-height: 40px;
       text-align: center;
-      background-color: var(--themePageNavBgColor);
+      background-color: var(--theme-page-nav-bg-color);
       cursor: pointer;
       transition: all 0.3s ease;
-      bottom: var(--themePageItemSize);
-      left: var(--themePageItemSize);
+      bottom: var(--theme-page-item-size);
+      left: var(--theme-page-item-size);
     }
     
     .bk-pager_nav:hover:after,.bk-pager_nav:hover:before {
-      background: var(--themePageItemHoverColor) !important;
+      background: var(--theme-page-item-hover-color) !important;
     }
     
     .bk-pager_nav svg {
@@ -249,7 +249,7 @@ fn get_class_name() -> String {
       bottom: 0;
       height: 5px;
       width: calc(100% - 5px);
-      background: var(--themePageItemHoverColor);
+      background: var(--theme-page-item-hover-color);
     }
     
     .bk-pager_nav:nth-of-type(1):before {
@@ -259,7 +259,7 @@ fn get_class_name() -> String {
       bottom: 0;
       height: 100%;
       width: 5px;
-      background: var(--themePageItemHoverColor);
+      background: var(--theme-page-item-hover-color);
     }
     
     .bk-pager_nav:nth-of-type(2):after {
@@ -269,7 +269,7 @@ fn get_class_name() -> String {
       top: 0;
       height: 5px;
       width: calc(100% - 5px);
-      background: var(--themePageItemHoverColor);
+      background: var(--theme-page-item-hover-color);
     }
 
     .bk-pager_nav:nth-of-type(2):before {
@@ -279,7 +279,7 @@ fn get_class_name() -> String {
       top: 0;
       height: 100%;
       width: 5px;
-      background: var(--themePageItemHoverColor);
+      background: var(--theme-page-item-hover-color);
     }
     
     .bk-pager_nav.disabled {
@@ -288,13 +288,13 @@ fn get_class_name() -> String {
     }
     
     .bk-pager_holder {
-      width: var(--themePageItemSize);
-      height: var(--themePageItemSize);
+      width: var(--theme-page-item-size);
+      height: var(--theme-page-item-size);
       position: absolute;
-      background-color: var(--themeBaseColor);
+      background-color: var(--theme-base-color);
       z-index: 3;
-      left: var(--themePageItemSize);
-      top: var(--themePageItemSize);
+      left: var(--theme-page-item-size);
+      top: var(--theme-page-item-size);
       cursor: pointer;
       transition: all 0.2s 0.5s ease-in-out;
       animation: breathPage 2s 4s ease-in-out alternate infinite;
@@ -313,20 +313,20 @@ fn get_class_name() -> String {
     .bk-pager_holder:after {
       width: 40%;
       height: 40%;
-      background-color: var(--themePageItemBreathColor2);
+      background-color: var(--theme-page-item-breath-color2);
       animation: breathPage2 2s ease-in-out alternate infinite;
     }
     
     .bk-pager_holder:before {
       width: 70%;
       height: 70%;
-      background-color: var(--themePageItemBreathColor1);
+      background-color: var(--theme-page-item-breath-color1);
       animation: breathPage1 2s 2s ease-in-out alternate infinite;
     }
     
     .bk-pager_con {
-      width: calc(2 * var(--themePageItemSize));
-      height: calc(2 * var(--themePageItemSize));
+      width: calc(2 * var(--theme-page-item-size));
+      height: calc(2 * var(--theme-page-item-size));
       position: absolute;
       left: 0px;
       top: 0px;
@@ -345,8 +345,8 @@ fn get_class_name() -> String {
       width: 100%;
       height: 100%;
       font-family: ZagRegular;
-      line-height: var(--themePageItemSize);
-      color: var(--themeBaseColor);
+      line-height: var(--theme-page-item-size);
+      color: var(--theme-base-color);
       letter-spacing: 2px;
     }
     
@@ -354,19 +354,19 @@ fn get_class_name() -> String {
       position: absolute;
       color: white;
       font-size: 20px;
-      width: var(--themePageItemSize);
-      height: var(--themePageItemSize);
-      left: var(--themePageItemSize);
-      top: var(--themePageItemSize);
+      width: var(--theme-page-item-size);
+      height: var(--theme-page-item-size);
+      left: var(--theme-page-item-size);
+      top: var(--theme-page-item-size);
       line-height: 40px;
       text-align: center;
-      background-color: var(--themePageNavBgColor);
+      background-color: var(--theme-page-nav-bg-color);
       cursor: pointer;
       transition: all 0.2s ease;
     }
     
     .bk-pager_item:hover,.bk-pager_item.current {
-      background-color: var(--themePageItemHoverColor);
+      background-color: var(--theme-page-item-hover-color);
     }
     
     .bk-pager_item.current {
@@ -379,12 +379,12 @@ fn get_class_name() -> String {
     }
     
     .bk-pager_go {
-      width: 2 * var(--themePageItemSize);
-      height: 2 * var(--themePageItemSize);
+      width: 2 * var(--theme-page-item-size);
+      height: 2 * var(--theme-page-item-size);
       position: absolute;
       font-size: 0px;
-      left: var(--themePageItemSize);
-      top: var(--themePageItemSize);
+      left: var(--theme-page-item-size);
+      top: var(--theme-page-item-size);
       z-index: 1;
     }
     
@@ -404,19 +404,19 @@ fn get_class_name() -> String {
     }
     
     .bk-pager_go-span::placeholder {
-      color: var(--themeBaseColor);
+      color: var(--theme-base-color);
     }
     
     .bk-pager_go-input::placeholder {
-      color: var(--themeBaseColor);
+      color: var(--theme-base-color);
     }
     
     .bk-pager_go-span {
       font-size: 12px;
-      line-height: var(--themePageItemSize);
+      line-height: var(--theme-page-item-size);
       text-overflow: ellipsis;
       overflow: hidden;
-      color: var(--themeBaseColor);
+      color: var(--theme-base-color);
       white-space: nowrap;
     }
     
@@ -425,8 +425,8 @@ fn get_class_name() -> String {
       font-size: 14px;
       outline: none;
       box-sizing: border-box;
-      border-bottom: 4px solid var(--themeBaseColor);
-      color: var(--themeBaseColor);
+      border-bottom: 4px solid var(--theme-base-color);
+      color: var(--theme-base-color);
     }
     
     .bk-pager_go-input.animation {
@@ -436,8 +436,8 @@ fn get_class_name() -> String {
     .bk-pager_go-em,
     .bk-pager_go-div,
     .bk-pager_btn {
-      width: var(--themePageItemSize);
-      height: var(--themePageItemSize);
+      width: var(--theme-page-item-size);
+      height: var(--theme-page-item-size);
       box-sizing: border-box;
       display: inline-block;
       position: absolute;
@@ -446,8 +446,8 @@ fn get_class_name() -> String {
       left: 0;
       top: 0;
       vertical-align: top;
-      color: var(--themeBaseColor);
-      background-color: var(--themePageNavBgColor);
+      color: var(--theme-base-color);
+      background-color: var(--theme-page-nav-bg-color);
       transition: all 0.2s ease;
     }
     
@@ -462,14 +462,14 @@ fn get_class_name() -> String {
     }
     
     .bk-pager_btn:hover {
-      background-color: var(--themePageItemHoverColor);
+      background-color: var(--theme-page-item-hover-color);
     }
     
     .bk-pager_btn span {
       width: 40%;
       height: 40%;
       display: block;
-      background: var(--themeBaseColor);
+      background: var(--theme-base-color);
       position: absolute;
       right: 0;
       bottom: 0;
@@ -477,31 +477,31 @@ fn get_class_name() -> String {
     
     @keyframes breathPage {
       0% {
-        background-color: var(--themeBaseColor);
+        background-color: var(--theme-base-color);
       }
       100% {
-        background-color: var(--themePageItemBreathColor2);
+        background-color: var(--theme-page-item-breath-color2);
       }
     }
     
     @keyframes breathPage1 {
       0% {
-        background-color: var(--themePageItemBreathColor1);
+        background-color: var(--theme-page-item-breath-color1);
       }
       50% {
-        background-color: var(--themePageItemBreathColor2);
+        background-color: var(--theme-page-item-breath-color2);
       }
       100% {
-        background-color: var(--themeBaseColor);
+        background-color: var(--theme-base-color);
       }
     }
     
     @keyframes breathPage2 {
       0% {
-        background-color: var(--themePageItemBreathColor2);
+        background-color: var(--theme-page-item-breath-color2);
       }
       100% {
-        background-color: var(--themeBaseColor);
+        background-color: var(--theme-base-color);
       }
     }
     
@@ -510,7 +510,7 @@ fn get_class_name() -> String {
         border-color: transparent;
       }
       100% {
-        border-color: var(--themeBaseColor);
+        border-color: var(--theme-base-color);
       }
     }
     "#

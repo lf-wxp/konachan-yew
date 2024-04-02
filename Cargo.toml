@@ -35,6 +35,7 @@ web-sys = {version = "0.3.67", features = [
   "Element",
   "HtmlElement",
   "HtmlLiElement",
+  "HtmlImageElement",
   "HtmlCanvasElement",
   "CanvasRenderingContext2d",
   "Window",
@@ -47,23 +48,9 @@ web-sys = {version = "0.3.67", features = [
 ]}
 yew = {version = "0.21.0", features = ["csr"]}
 yew-hooks = "0.3.0"
+yew-scroll-area = "0.4.0"
 yew_icons = {version = "0.8.0", features = [
-  "HeroiconsSolidUserGroup",
-  "BootstrapCameraVideoFill",
-  "LucideSettings",
-  "HeroiconsMiniSolidHome",
-  "FontAwesomeSolidVolumeHigh",
-  "FontAwesomeSolidVolumeXmark",
-  "BootstrapSearch",
-  "FontAwesomeSolidXmark",
-  "BootstrapEmojiSmile",
-  "BootstrapSendFill",
-  "HeroiconsSolidMicrophone",
-  "FontAwesomeRegularImages",
-  "BootstrapCheckCircleFill",
-  "BootstrapInfoCircleFill",
-  "BootstrapPauseFill",
-  "BootstrapPlayFill",
   "BootstrapSunFill",
   "BootstrapMoonStarsFill",
+  "FontAwesomeSolidDownload"
 ]}
