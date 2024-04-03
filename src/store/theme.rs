@@ -21,7 +21,7 @@ impl ThemeColor {
       primary_color,
       ancillary_color,
     } = self;
-    format!("--theme-base-color: rgb({theme_color});--theme-color-rgb: {theme_color};--primary-color: rgb({primary_color});--theme-ancillary-color: rgb({ancillary_color});")
+    format!("--theme-base-color: rgb({theme_color});--theme-color-rgb: {theme_color};--theme-primary-color: rgb({primary_color});--theme-ancillary-color: rgb({ancillary_color});")
   }
   pub fn get_color(&self) -> (String, String, String) {
     let ThemeColor {
