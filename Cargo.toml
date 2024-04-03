@@ -12,6 +12,7 @@ web = []
 [dependencies]
 bounce = "0.9.0"
 chrono = "0.4.33"
+color-thief = "0.2.2"
 fake = {version = "2.9.2", features = ["derive", "uuid", "chrono"]}
 getrandom = {version = "0.2.12", features = ["js"]}
 gloo-console = "0.3.0"
@@ -37,6 +38,7 @@ web-sys = {version = "0.3.67", features = [
   "HtmlLiElement",
   "HtmlImageElement",
   "HtmlCanvasElement",
+  "ImageData",
   "CanvasRenderingContext2d",
   "Window",
   "Url",

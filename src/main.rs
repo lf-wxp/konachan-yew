@@ -2,7 +2,7 @@ use bounce::BounceRoot;
 use stylist::{self, style};
 use yew::prelude::*;
 
-use components::{Background, Service, Nav, DynamicWallpaper, List};
+use components::{Background, DynamicWallpaper, List, Nav, Service};
 use utils::style;
 
 mod components;
@@ -16,17 +16,17 @@ fn App() -> Html {
   let class_name = get_class_name();
   html! {
       <BounceRoot>
-          <Service />
-          <section class={class_name}>
-            <Background />
-            <DynamicWallpaper />
-            <div class={"side"}>
-              <Nav />
-            </div>
-            <div class="content">
-              <List />
-            </div>
-          </section>
+        <Service />
+        <section class={class_name}>
+          <Background />
+          <DynamicWallpaper />
+          <div class={"side"}>
+            <Nav />
+          </div>
+          <div class="content">
+            <List />
+          </div>
+        </section>
       </BounceRoot>
   }
 }
@@ -62,6 +62,5 @@ fn get_class_name() -> String {
 }
 
 fn main() {
-  // set_client();
   yew::Renderer::<App>::new().render();
 }

@@ -1,3 +1,4 @@
+use color_thief::Color;
 use indexmap::{self, IndexMap};
 use js_sys::ArrayBuffer;
 use rand::{self, Rng};
@@ -5,11 +6,12 @@ use std::ops::Range;
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
 use web_sys::{
-  window,  Blob, BlobPropertyBag, Document, Event, FileReader,  Url, Window,
+  window, Blob, BlobPropertyBag, CanvasRenderingContext2d, Document, Event, FileReader,
+  HtmlCanvasElement, HtmlImageElement, Url, Window,
 };
 use yew::{
   virtual_dom::{ApplyAttributeAs, Attributes, VNode},
-  AttrValue,
+  AttrValue, NodeRef,
 };
 
 pub fn random(rang: Range<u16>) -> u16 {
@@ -143,4 +145,36 @@ pub fn array_buffer_to_blob_url(
 
   let url = Url::create_object_url_with_blob(&blob)?;
   Ok(url)
+}
+
+pub fn get_ctx(canvas: &HtmlCanvasElement) -> Result<CanvasRenderingContext2d, JsValue> {
+  let ctx = canvas
+    .get_context("2d")?
+    .ok_or("")?
+    .dyn_into::<CanvasRenderingContext2d>()
+    .ok()
+    .ok_or("")?;
+  Ok(ctx)
+}
+
+pub fn get_html_image_to_vec(img: HtmlImageElement) -> Result<Vec<u8>, JsValue> {
+  let document = get_document();
+  let canvas: HtmlCanvasElement = document.create_element("canvas")?.dyn_into()?;
+  canvas.set_width(img.width());
+  canvas.set_height(img.height());
+  let width = canvas.width() as f64;
+  let height = canvas.height() as f64;
+  let ctx = get_ctx(&canvas)?;
+  ctx.draw_image_with_html_image_element(&img, 0.0, 0.0)?;
+  let img_data = ctx.get_image_data(0.0, 0.0, width, height)?;
+  Ok(img_data.data().to_vec())
+}
+
+pub fn node_ref_to_html<T: JsCast>(node_ref: NodeRef) -> Option<T> {
+  node_ref.get().and_then(|node| node.dyn_into::<T>().ok())
+}
+
+pub fn bare_rgb(rgb: Color) -> String {
+  let Color { r, g, b } = rgb;
+  format!("{r},{g},{b}")
 }
