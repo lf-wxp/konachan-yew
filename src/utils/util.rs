@@ -6,8 +6,7 @@ use std::ops::Range;
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
 use web_sys::{
-  window, Blob, BlobPropertyBag, CanvasRenderingContext2d, Document, Event, FileReader,
-  HtmlCanvasElement, HtmlImageElement, Url, Window,
+  window, Blob, BlobPropertyBag, CanvasRenderingContext2d, Document, Event, FileReader, HtmlAnchorElement, HtmlCanvasElement, HtmlImageElement, Url, Window
 };
 use yew::{
   virtual_dom::{ApplyAttributeAs, Attributes, VNode},
@@ -177,4 +176,17 @@ pub fn node_ref_to_html<T: JsCast>(node_ref: NodeRef) -> Option<T> {
 pub fn bare_rgb(rgb: Color) -> String {
   let Color { r, g, b } = rgb;
   format!("{r},{g},{b}")
+}
+
+pub fn download_file(url: &str, name: &str) -> Result<(), JsValue> {
+  let document = get_document();
+  let body = document.body().ok_or("get body error")?;
+  let a: HtmlAnchorElement = document.create_element("a").unwrap().dyn_into().unwrap();
+  a.set_href(url);
+  a.set_download(name);
+  a.set_target("_blank");
+  body.append_child(&a)?;
+  a.click();
+  body.remove_child(&a)?;
+  Ok(())
 }

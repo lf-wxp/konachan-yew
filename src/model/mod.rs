@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
 
-use crate::store::Image;
+use crate::store::{Image, Mode};
 
 pub type Error = Box<dyn std::error::Error>;
 pub type UResult<T> = std::result::Result<T, Error>;
@@ -10,13 +10,14 @@ pub type UResult<T> = std::result::Result<T, Error>;
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ImageData {
   pub images: Vec<Image>,
-  pub count: u32,
+  pub count: usize,
 }
 #[derive(PartialEq, Clone, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ImageRes {
   pub code: i32,
   pub data: ImageData,
+  pub msg: Option<String>,
 }
 
 #[derive(PartialEq, Clone, Serialize, Deserialize, Debug)]
@@ -39,61 +40,34 @@ impl Display for Action {
 }
 
 #[derive(PartialEq, Clone, Serialize, Deserialize, Debug)]
-#[serde(rename_all = "snake_case")]
-pub enum FetchMode {
-  Xml,
-  Json,
-}
-
-impl Display for FetchMode {
-  fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-    let text = match self {
-      FetchMode::Json => "json",
-      FetchMode::Xml => "xml",
-    };
-    write!(f, "{}", text)
-  }
-}
-#[derive(PartialEq, Clone, Serialize, Deserialize, Debug)]
 pub struct FetchParams {
   page: u32,
-  tags: Option<String>,
-  refresh: Option<bool>,
-  mode: Option<FetchMode>,
+  tags: String,
+  mode: Mode,
+  limit: u32,
 }
 
 impl FetchParams {
-  pub fn new(
-    page: u32,
-    tags: Option<String>,
-    refresh: Option<bool>,
-    mode: Option<FetchMode>,
-  ) -> Self {
+  pub fn new(page: u32, tags: String, mode: Mode) -> Self {
     FetchParams {
       page,
       tags,
-      refresh,
       mode,
+      limit: 20,
     }
   }
   pub fn param(&self) -> Vec<(&'static str, String)> {
     let FetchParams {
       page,
       tags,
-      refresh,
       mode,
+      limit,
     } = self.clone();
-    let mut params: Vec<(&'static str, String)> = Vec::new();
-    params.push(("page", page.to_string()));
-    if let Some(tag) = tags {
-      params.push(("tags", tag));
-    }
-    if let Some(refr) = refresh {
-      params.push(("refresh", refr.to_string()));
-    }
-    if let Some(m) = mode {
-      params.push(("mode", m.to_string()));
-    }
-    params
+    vec![
+      ("page", page.to_string()),
+      ("tags", tags),
+      ("mode", mode.to_string()),
+      ("limit", limit.to_string()),
+    ]
   }
 }

@@ -1,9 +1,10 @@
 use bounce::Atom;
+use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
 
 use super::Invertible;
 
-#[derive(Atom, PartialEq, Default)]
+#[derive(Atom, PartialEq, Serialize, Deserialize, Default, Clone, Debug)]
 pub enum Mode {
   #[default]
   Json,

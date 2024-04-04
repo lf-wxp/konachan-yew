@@ -8,7 +8,6 @@ use crate::utils::{calc_waterfall, WaterfallParams};
 use super::{Security, Size};
 
 #[derive(PartialEq, Clone, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
 pub(crate) struct Image {
   pub id: u32,
   pub sample_width: f64,
@@ -40,7 +39,7 @@ impl Images {
 
 impl Default for Images {
   fn default() -> Self {
-    return Images(vec![]);
+    Images(vec![])
   }
 }
 
@@ -59,8 +58,8 @@ impl Selector for FilterImages {
     let security = states.get_atom_value::<Security>();
     let size = states.get_atom_value::<Size>();
     let items = calc_waterfall(WaterfallParams {
-      security: security.value(),
-      width: size.value(),
+      security: *security.value(),
+      width: *size.value(),
       max_width: 300.0,
       min_width: 200.0,
       images: images.value().to_vec(),

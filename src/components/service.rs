@@ -1,4 +1,6 @@
-use bounce::{use_atom, use_atom_setter, use_atom_value};
+use std::rc::Rc;
+
+use bounce::{use_atom_setter, use_atom_value};
 use gloo_console::log;
 use wasm_bindgen_futures::spawn_local;
 use yew::{function_component, html, use_effect_with, Html};
@@ -6,27 +8,34 @@ use yew::{function_component, html, use_effect_with, Html};
 use crate::{
   hook::use_theme,
   model::FetchParams,
-  store::{Refresh, Images, Loading, Page},
-  utils::fetch_data,
+  store::{Images, Loading, Mode, Page, Refresh, Tags, Total},
+  utils::fetch_action,
 };
 
 #[function_component]
 pub fn Service() -> Html {
   use_theme();
   let page = use_atom_value::<Page>();
+  let total_handle = use_atom_setter::<Total>();
   let loading_handle = use_atom_setter::<Loading>();
   let refresh = use_atom_value::<Refresh>();
-  let images_handle = use_atom::<Images>();
-  let page_clone = page.clone();
+  let mode = use_atom_value::<Mode>();
+  let tags = use_atom_value::<Tags>();
+  let images_handle = use_atom_setter::<Images>();
 
-  use_effect_with((page, refresh), move |_| {
+  use_effect_with((page, tags, mode, refresh), move |val: &(Rc<Page>, Rc<Tags>, Rc<Mode>, Rc<Refresh>)| {
+    let (page, tags, mode, _) = val;
+    let page = (**page).clone();
+    let tags = (**tags).clone();
+    let mode = (**mode).clone();
     loading_handle(Loading::new(true));
     spawn_local(async move {
-      let res = fetch_data(FetchParams::new(page_clone.value(), None, None, None))
+      let res = fetch_action(FetchParams::new(*page.value(), tags.value().clone(), mode))
         .await
         .unwrap();
       loading_handle(Loading::new(false));
-      images_handle.set(Images::from(res.data.images));
+      images_handle(Images::from(res.data.images));
+      total_handle(Total::new(res.data.count as u32));
       log!("loading");
     });
   });

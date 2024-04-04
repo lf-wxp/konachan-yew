@@ -1,9 +1,10 @@
 use gloo_net::http::{Headers, Request};
+use js_sys::encode_uri;
 use tauri_sys::tauri;
 
-use crate::model::{Action, Error, FetchParams, ImageRes};
+use crate::{model::{Action, Error, FetchParams, ImageRes}, store::Image, utils::download_file};
 
-pub async fn fetch_data(params: FetchParams) -> Result<ImageRes, Error> {
+pub async fn fetch_action(params: FetchParams) -> Result<ImageRes, Error> {
   #[cfg(feature = "web")]
   {
     let url = "/api/post";
@@ -11,7 +12,7 @@ pub async fn fetch_data(params: FetchParams) -> Result<ImageRes, Error> {
     let headers = Headers::new();
     headers.append("x-api-key", "konachan-api");
     headers.append("ContentType", "application/json");
-    let resp = Request::get(&url)
+    let resp = Request::get(url)
       .headers(headers)
       .query(query)
       .send()
@@ -28,7 +29,21 @@ pub async fn fetch_data(params: FetchParams) -> Result<ImageRes, Error> {
   #[cfg(feature = "fake")]
   {
     let json_data = include_str!("../../static/mock/post.json");
-    let json: ImageRes = serde_json::from_str(&json_data)?;
+    let json: ImageRes = serde_json::from_str(json_data)?;
     Ok(json)
+  }
+}
+
+pub async fn download_action(item: Image) -> Result<(), Error> {
+  #[cfg(not(feature = "tauri"))]
+  {
+    let url = format!("/api/image?url={}", encode_uri(&item.url));
+    download_file(&url, &item.name);
+    Ok(())
+  }
+  #[cfg(feature = "tauri")]
+  {
+    tauri::invoke(&Action::DownloadItem.to_string(), &item.url).await?;
+    Ok(())
   }
 }

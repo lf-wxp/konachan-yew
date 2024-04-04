@@ -40,14 +40,18 @@ pub fn Image(props: &Props) -> Html {
   let animation_end = use_state(|| false);
   let state_clone = state.clone();
 
-  let class = format!("{} {}", props.class_name, state.to_string());
-  let figure_class = format!("bk-image {}", if *animation_end {"animationedn"} else {""});
+  let class = format!("{} {}", props.class_name, *state);
+  let figure_class = format!("bk-image {}", if *animation_end {"animationend"} else {""});
   let figure_style = format!("width: {}px; height: {}px", props.width - 10.0, props.height - 10.0);
 
   let onanimationend = Callback::from(move |_: AnimationEvent| {
     animation_end.set(true);
   });
-  let onload = Callback::from(move |_: Event| state_clone.set(ImageState::Loaded));
+  let onload = Callback::from(move |_: Event| {
+    if !matches!(*state_clone, ImageState::Error) {
+      state_clone.set(ImageState::Loaded)
+    }
+  });
   let onerror = {
     let alternative = props.alternative.clone();
     let state = state.clone();
@@ -105,6 +109,9 @@ fn get_class_name() -> String {
       
       .bk-image > img.loaded,.bk-image > img.error {
         animation: fadeIn 0.2s ease 0s 1 normal both;
+      }
+      .bk-image > img.error {
+        object-fit: scale-down;
       }
     "#
   ))

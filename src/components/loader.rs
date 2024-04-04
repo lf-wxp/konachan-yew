@@ -12,7 +12,7 @@ pub fn Loader() -> Html {
   let class_name = get_class_name();
   let loading = use_atom_value::<Loading>();
   html! {
-    if loading.value() {
+    if *loading.value() {
       <section class={class_name}>
         <div class="loader"/>
       </section>

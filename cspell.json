@@ -1,1 +1,21 @@
-{"words":["onanimationend","navpage","onclick","gloo","tauri","indexmap","getrandom","chrono","serde","bindgen"],"language":"en","version":"0.2","flagWords":[]}
+{
+    "words": [
+        "animationedn",
+        "animationend",
+        "bindgen",
+        "chrono",
+        "getrandom",
+        "gloo",
+        "indexmap",
+        "navpage",
+        "onanimationend",
+        "onclick",
+        "oninput",
+        "onkeypress",
+        "serde",
+        "tauri"
+    ],
+    "language": "en",
+    "version": "0.2",
+    "flagWords": []
+}

@@ -17,11 +17,11 @@ pub fn Setting() -> Html {
 
   let active_class = format!(
     "bk-setting__security animation {}",
-    if security.value() { "active" } else { "" }
+    if *security.value() { "active" } else { "" }
   );
   let loading_class = format!(
     "bk-setting__refresh animation {}",
-    if loading.value() { "active" } else { "" }
+    if *loading.value() { "active" } else { "" }
   );
   let mode_class = format!("bk-mode {}", *mode);
 

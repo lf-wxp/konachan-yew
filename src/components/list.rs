@@ -1,6 +1,6 @@
 use bounce::{use_atom_setter, use_selector_value};
-use gloo_console::log;
 use stylist::{self, style};
+use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;
 use yew_hooks::use_size;
 use yew_icons::{Icon, IconId};
@@ -8,7 +8,7 @@ use yew_icons::{Icon, IconId};
 use crate::{
   components::Image,
   store::{self, FilterImages, Size},
-  utils::style,
+  utils::{download_action, style},
 };
 
 #[function_component]
@@ -27,7 +27,9 @@ pub fn List() -> Html {
   };
 
   let download = Callback::from(move |item: store::Image| {
-    log!("download", format!("{:?}", item));
+    spawn_local(async {
+      let _ = download_action(item).await;
+    });
   });
 
   use_effect_with(width, move |val: &u32| {
@@ -49,7 +51,7 @@ pub fn List() -> Html {
             class={"bk-list__item"}
           >
           <Image
-            alternative={Some("")}
+            alternative={Some("/image/error.png")}
             class_name="bk-list__img"
             width={width}
             height={height}
@@ -61,13 +63,12 @@ pub fn List() -> Html {
               {ele.width} {" / "} {ele.height}
             </p>
           </div>
-          <a
+          <span
             class="bk-list__down"
-            download={ele.name}
             onclick={download.reform(move |_| ele_clone.clone())}
           >
             <Icon icon_id={IconId::FontAwesomeSolidDownload}  width="1em" height="1em" />
-          </a>
+          </span>
           </figure>
         }})}
       </div>

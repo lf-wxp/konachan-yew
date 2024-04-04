@@ -52,12 +52,11 @@ pub fn Nav() -> Html {
   let page_handle = use_atom::<Page>();
   let page = use_atom_value::<Page>();
   let total = use_atom_value::<Total>();
-  let page_vec = get_page_vec(page.value(), total.value());
+  let page_vec = get_page_vec(*page.value(), *total.value());
 
   let next = Callback::from(move |_: MouseEvent| {});
   let prev = Callback::from(move |_: MouseEvent| {});
   let invoke = Callback::from(move |id: u32| {
-    log!("invoke", id);
     page_handle.set(Page::new(id));
   });
   let goto = Callback::from(move |_: MouseEvent| {});
@@ -74,7 +73,8 @@ pub fn Nav() -> Html {
   };
 
   let bk_page_nav_next = {
-    let param = if total.value() - page.value() > 0 {
+    let result = total.value().checked_sub(*page.value()).unwrap_or(0);
+    let param = if result > 0 {
       ""
     } else {
       "disabled"
@@ -83,8 +83,8 @@ pub fn Nav() -> Html {
   };
 
   let bk_page_item = |item: &u32| -> String {
-    let current = if page.value() == *item { "current" } else { "" };
-    let size = if page.value() >= 102 { "middle" } else { "" };
+    let current = if *page.value() == *item { "current" } else { "" };
+    let size = if *page.value() >= 102 { "middle" } else { "" };
     format!("bk-pager_item {} {}", current, size)
   };
 
