@@ -1,10 +1,9 @@
-use std::time::Duration;
 use bounce::use_atom_setter;
 use stylist::{self, style};
 use wasm_bindgen_futures::spawn_local;
 use web_sys::HtmlImageElement;
-use yew::{function_component, html,  platform::time::sleep, Callback, Event, Html};
-use gloo_console::log;
+use yew::{function_component, html, Callback, Event, Html};
+use gloo_timers::future::TimeoutFuture;
 
 use crate::{
   store::ThemeColor,
@@ -20,7 +19,7 @@ pub fn Background() -> Html {
 
   let load = Callback::from(move |e: Event| {
     if let Some(target) = get_target::<Event, HtmlImageElement>(e) {
-      let pixel = get_html_image_to_vec(target).unwrap_or(vec![]);
+      let pixel = get_html_image_to_vec(target).unwrap_or_default();
       let colors = color_thief::get_palette(&pixel, color_thief::ColorFormat::Rgb, 10, 3).unwrap();
       let theme = colors[0];
       let primary = colors[1];
@@ -33,8 +32,8 @@ pub fn Background() -> Html {
 
       #[cfg(feature = "tauri")]
       spawn_local(async {
-        sleep(Duration::from_micros(50)).await;
-        close_splashscreen().await;
+        TimeoutFuture::new(50).await;
+        let _ = close_splashscreen().await;
       });
     }
   });

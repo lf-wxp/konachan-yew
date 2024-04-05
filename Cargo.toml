@@ -19,7 +19,7 @@ gloo-console = "0.3.0"
 gloo-events = "0.2.0"
 gloo-net = "0.5.0"
 gloo-render = "0.2.0"
-gloo-timers = "0.3.0"
+gloo-timers = {version = "0.3.0", features = ["futures"] }
 gloo-utils = "0.2.0"
 indexmap = "2.2.1"
 js-sys = "0.3.67"
@@ -47,6 +47,8 @@ web-sys = {version = "0.3.67", features = [
   "EventListener",
   "EventTarget",
   "DomStringMap",
+  "ServiceWorkerContainer",
+  "RegistrationOptions",
   "CssStyleDeclaration",
 ]}
 yew = {version = "0.21.0", features = ["csr"]}

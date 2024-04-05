@@ -2,8 +2,8 @@ use bounce::BounceRoot;
 use stylist::{self, style};
 use yew::prelude::*;
 
-use components::{Background, DynamicWallpaper, List, Loader, Nav, Service, Setting, Search};
-use utils::style;
+use components::{Background, DynamicWallpaper, List, Loader, Nav, Search, Service, Setting};
+use utils::{register_ws, style};
 
 mod components;
 mod hook;
@@ -14,6 +14,10 @@ mod utils;
 #[function_component]
 fn App() -> Html {
   let class_name = get_class_name();
+  #[cfg(not(feature = "tauri"))]
+  {
+    register_ws();
+  }
   html! {
       <BounceRoot>
         <Service />

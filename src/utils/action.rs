@@ -1,8 +1,13 @@
+use gloo_console::log;
 use gloo_net::http::{Headers, Request};
 use js_sys::encode_uri;
 use tauri_sys::tauri;
 
-use crate::{model::{Action, Error, FetchParams, ImageRes}, store::Image, utils::download_file};
+use crate::{
+  model::{Action, DownloadParam, Empty, Error, FetchParams, ImageRes},
+  store::Image,
+  utils::download_file,
+};
 
 pub async fn fetch_action(params: FetchParams) -> Result<ImageRes, Error> {
   #[cfg(feature = "web")]
@@ -42,7 +47,11 @@ pub async fn download_action(item: Image) -> Result<(), Error> {
   }
   #[cfg(feature = "tauri")]
   {
-    tauri::invoke(&Action::DownloadItem.to_string(), &item.url).await?;
+    tauri::invoke(
+      &Action::DownloadImage.to_string(),
+      &DownloadParam { url: item.url },
+    )
+    .await?;
     Ok(())
   }
 }
@@ -50,7 +59,7 @@ pub async fn download_action(item: Image) -> Result<(), Error> {
 pub async fn close_splashscreen() -> Result<(), Error> {
   #[cfg(feature = "tauri")]
   {
-    tauri::invoke(&Action::CloseSplashscreen.to_string(), &"").await?;
+    tauri::invoke(&Action::CloseSplashscreen.to_string(), &Empty).await?;
     Ok(())
   }
 }

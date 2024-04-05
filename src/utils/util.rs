@@ -4,9 +4,10 @@ use js_sys::ArrayBuffer;
 use rand::{self, Rng};
 use std::ops::Range;
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
-use wasm_bindgen_futures::JsFuture;
+use wasm_bindgen_futures::{spawn_local, JsFuture};
 use web_sys::{
-  window, Blob, BlobPropertyBag, CanvasRenderingContext2d, Document, Event, FileReader, HtmlAnchorElement, HtmlCanvasElement, HtmlImageElement, Url, Window
+  window, Blob, BlobPropertyBag, CanvasRenderingContext2d, Document, Event, FileReader,
+  HtmlAnchorElement, HtmlCanvasElement, HtmlImageElement, RegistrationOptions, Url, Window,
 };
 use yew::{
   virtual_dom::{ApplyAttributeAs, Attributes, VNode},
@@ -189,4 +190,26 @@ pub fn download_file(url: &str, name: &str) -> Result<(), JsValue> {
   a.click();
   body.remove_child(&a)?;
   Ok(())
+}
+
+pub fn register_ws() {
+  let window = get_window();
+  let closure = Closure::<dyn Fn(_)>::new(move |_: Event| {
+    spawn_local(async move {
+      let window = get_window();
+      let mut options = RegistrationOptions::new();
+      options.scope("/");
+      let _ = JsFuture::from(
+        window
+          .navigator()
+          .service_worker()
+          .register_with_options("/sw.js", &options),
+      )
+      .await;
+    });
+  });
+  window
+    .add_event_listener_with_callback("load", closure.as_ref().unchecked_ref())
+    .ok();
+  closure.forget();
 }

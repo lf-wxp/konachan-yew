@@ -24,7 +24,7 @@ pub(crate) struct ImageRes {
 #[serde(rename_all = "snake_case")]
 pub enum Action {
   GetPost,
-  DownloadItem,
+  DownloadImage,
   CloseSplashscreen,
 }
 
@@ -32,7 +32,7 @@ impl Display for Action {
   fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
     let text = match self {
       Action::GetPost => "get_post",
-      Action::DownloadItem => "download_item",
+      Action::DownloadImage => "download_image",
       Action::CloseSplashscreen => "close_splashscreen",
     };
     write!(f, "{}", text)
@@ -70,4 +70,12 @@ impl FetchParams {
       ("limit", limit.to_string()),
     ]
   }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Empty;
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DownloadParam {
+  pub url: String,
 }

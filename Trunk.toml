@@ -1,5 +1,5 @@
 [serve]
-port = 1234
+port = 8888 
 [[proxy]]
 rewrite = "/api/"
 backend = "http://localhost:8000/"
