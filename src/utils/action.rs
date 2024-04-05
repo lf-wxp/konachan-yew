@@ -22,8 +22,7 @@ pub async fn fetch_action(params: FetchParams) -> Result<ImageRes, Error> {
   }
   #[cfg(feature = "tauri")]
   {
-    let json_data: String = tauri::invoke(&Action::GetPost.to_string(), &params).await?;
-    let json: ImageRes = serde_json::from_str(&json_data)?;
+    let json: ImageRes = tauri::invoke(&Action::GetPost.to_string(), &params).await?;
     return Ok(json);
   }
   #[cfg(feature = "fake")]
@@ -44,6 +43,14 @@ pub async fn download_action(item: Image) -> Result<(), Error> {
   #[cfg(feature = "tauri")]
   {
     tauri::invoke(&Action::DownloadItem.to_string(), &item.url).await?;
+    Ok(())
+  }
+}
+
+pub async fn close_splashscreen() -> Result<(), Error> {
+  #[cfg(feature = "tauri")]
+  {
+    tauri::invoke(&Action::CloseSplashscreen.to_string(), &"").await?;
     Ok(())
   }
 }

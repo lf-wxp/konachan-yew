@@ -1,11 +1,14 @@
+use std::time::Duration;
 use bounce::use_atom_setter;
 use stylist::{self, style};
+use wasm_bindgen_futures::spawn_local;
 use web_sys::HtmlImageElement;
-use yew::{function_component, html, Callback, Event, Html};
+use yew::{function_component, html,  platform::time::sleep, Callback, Event, Html};
+use gloo_console::log;
 
 use crate::{
   store::ThemeColor,
-  utils::{bare_rgb, get_html_image_to_vec, get_target, random, style},
+  utils::{bare_rgb, get_html_image_to_vec, get_target, random, style, close_splashscreen},
 };
 
 #[function_component]
@@ -27,12 +30,18 @@ pub fn Background() -> Html {
         bare_rgb(primary),
         bare_rgb(ancillary),
       ));
+
+      #[cfg(feature = "tauri")]
+      spawn_local(async {
+        sleep(Duration::from_micros(50)).await;
+        close_splashscreen().await;
+      });
     }
   });
 
   html! {
     <section class={class_name}>
-      <img src={image} onload={load}/>
+      <img src={image} onload={load} />
     </section>
   }
 }
