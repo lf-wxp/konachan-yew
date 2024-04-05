@@ -7,7 +7,7 @@ use crate::utils::{calc_waterfall, WaterfallParams};
 
 use super::{Security, Size};
 
-#[derive(PartialEq, Clone, Deserialize, Debug)]
+#[derive(PartialEq, Clone, Deserialize, Debug, Default)]
 pub(crate) struct Image {
   pub id: u32,
   pub sample_width: f64,
@@ -28,18 +28,12 @@ pub(crate) struct Image {
   pub full: Option<bool>,
 }
 
-#[derive(Atom, PartialEq, Clone, Debug)]
+#[derive(Atom, PartialEq, Clone, Debug, Default)]
 pub(crate) struct Images(Vec<Image>);
 
 impl Images {
   pub fn value(&self) -> &Vec<Image> {
     &self.0
-  }
-}
-
-impl Default for Images {
-  fn default() -> Self {
-    Images(vec![])
   }
 }
 
@@ -49,7 +43,7 @@ impl From<Vec<Image>> for Images {
   }
 }
 
-#[derive(Atom, PartialEq, Clone, Debug)]
+#[derive(Atom, PartialEq, Clone, Debug, Default)]
 pub(crate) struct FilterImages(Vec<Image>);
 
 impl Selector for FilterImages {
@@ -71,11 +65,5 @@ impl Selector for FilterImages {
 impl FilterImages {
   pub fn value(&self) -> &Vec<Image> {
     &self.0
-  }
-}
-
-impl Default for FilterImages {
-  fn default() -> Self {
-    return FilterImages(vec![]);
   }
 }

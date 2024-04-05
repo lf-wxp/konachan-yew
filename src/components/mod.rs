@@ -7,6 +7,7 @@ pub mod image;
 pub mod setting;
 pub mod loader;
 pub mod search;
+pub mod pending;
 
 pub use background::*;
 pub use nav::*;
@@ -17,3 +18,4 @@ pub use image::*;
 pub use setting::*;
 pub use loader::*;
 pub use search::*;
+pub use pending::*;

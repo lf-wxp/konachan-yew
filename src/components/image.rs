@@ -4,7 +4,7 @@ use stylist::{self, style};
 use web_sys::HtmlImageElement;
 use yew::prelude::*;
 
-use crate::utils::{get_target, style};
+use crate::{components::Pending, utils::{get_target, style}};
 
 enum ImageState {
   Loaded,
@@ -41,8 +41,15 @@ pub fn Image(props: &Props) -> Html {
   let state_clone = state.clone();
 
   let class = format!("{} {}", props.class_name, *state);
-  let figure_class = format!("bk-image {}", if *animation_end {"animationend"} else {""});
-  let figure_style = format!("width: {}px; height: {}px", props.width - 10.0, props.height - 10.0);
+  let figure_class = format!(
+    "bk-image {}",
+    if *animation_end { "animationend" } else { "" }
+  );
+  let figure_style = format!(
+    "width: {}px; height: {}px",
+    props.width - 10.0,
+    props.height - 10.0
+  );
 
   let onanimationend = Callback::from(move |_: AnimationEvent| {
     animation_end.set(true);
@@ -75,6 +82,7 @@ pub fn Image(props: &Props) -> Html {
           onerror={onerror}
           onload={onload}
         />
+        <Pending visible={matches!(*state, ImageState::Pending)} />
       </figure>
     </div>
   }

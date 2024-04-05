@@ -1,11 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<style class="style-root">
-		</style>
-    <link rel="scss" data-trunk href="/static/css/style.scss" />
-    <link rel="copy-dir" data-trunk href="/static/font" data-target-path="./font" />
-    <link rel="copy-dir" data-trunk href="/static/image"  data-target-path="./image"/>
+		<link
+			rel="icon"
+			data-trunk
+			type="image/x-icon"
+			href="/static/image/logo.svg"
+			data-target-path="./"
+		/>
+		<link rel="scss" data-trunk href="/static/css/style.scss" />
+		<link
+			rel="copy-dir"
+			data-trunk
+			href="/static/font"
+			data-target-path="./font"
+		/>
+		<link
+			rel="copy-dir"
+			data-trunk
+			href="/static/image"
+			data-target-path="./image"
+		/>
+		<link
+			rel="copy-file"
+			data-trunk
+			href="/static/script/sw.js"
+			data-target-path="./"
+		/>
 	</head>
 	<body dir="ltr"></body>
+	<script>
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('/sw.js', { scope: '/' });
+			});
+		}
+	</script>
 </html>
