@@ -1,27 +1,12 @@
-use std::fmt::{self, Display};
-
 use stylist::{self, style};
 use web_sys::HtmlImageElement;
 use yew::prelude::*;
 
-use crate::{components::Pending, utils::{get_target, style}};
-
-enum ImageState {
-  Loaded,
-  Pending,
-  Error,
-}
-
-impl Display for ImageState {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    let text = match self {
-      ImageState::Loaded => "loaded",
-      ImageState::Pending => "pending",
-      ImageState::Error => "error",
-    };
-    write!(f, "{}", text)
-  }
-}
+use crate::{
+  components::Pending,
+  store::ImageState,
+  utils::{get_target, style},
+};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {

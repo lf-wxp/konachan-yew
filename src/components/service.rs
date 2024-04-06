@@ -3,14 +3,13 @@ use std::rc::Rc;
 use bounce::{use_atom_setter, use_atom_value};
 use gloo_console::log;
 use wasm_bindgen_futures::spawn_local;
-use rand::{seq::SliceRandom, thread_rng};
 use yew::{function_component, html, use_effect_with, Html};
 
 use crate::{
   hook::use_theme,
   model::FetchParams,
   store::{Images, Loading, Mode, Page, Refresh, Tags, Total},
-  utils::fetch_action,
+  utils::{fetch_action, listen_progress},
 };
 
 #[function_component]
@@ -34,13 +33,11 @@ pub fn Service() -> Html {
       let res = fetch_action(FetchParams::new(*page.value(), tags.value().clone(), mode))
         .await
         .unwrap();
-      let mut images = res.data.images;
-      let mut rng = thread_rng();
-      images.shuffle(&mut rng);
       loading_handle(Loading::new(false));
-      images_handle(Images::from(images));
+      images_handle(Images::from(res.data.images));
       total_handle(Total::new(res.data.count as u32));
       log!("loading");
+      listen_progress().await;
     });
   });
 

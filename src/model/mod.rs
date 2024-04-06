@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
 
-use crate::store::{Image, Mode};
+use crate::store::{Image, ImageState, Mode};
 
 pub type Error = Box<dyn std::error::Error>;
 pub type UResult<T> = std::result::Result<T, Error>;
@@ -78,4 +78,11 @@ pub struct Empty;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DownloadParam {
   pub url: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DownloadProgress {
+  pub url: String,
+  pub percent: f32,
+  pub status: ImageState,
 }

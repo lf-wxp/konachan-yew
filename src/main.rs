@@ -2,7 +2,7 @@ use bounce::BounceRoot;
 use stylist::{self, style};
 use yew::prelude::*;
 
-use components::{Background, DynamicWallpaper, List, Loader, Nav, Search, Service, Setting};
+use components::{Background, DynamicWallpaper, List, Loader, Nav, Search, Service, Setting, DownloadList};
 use utils::{register_ws, style};
 
 mod components;
@@ -28,6 +28,7 @@ fn App() -> Html {
             <Nav />
             <Setting />
             <Search />
+            <DownloadList />
           </div>
           <div class="content">
             <List />

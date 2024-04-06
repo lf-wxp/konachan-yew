@@ -2,10 +2,12 @@ use gloo_console::log;
 use gloo_net::http::{Headers, Request};
 use js_sys::encode_uri;
 use tauri_sys::tauri;
+use tauri_sys::event::listen;
+use futures_util::StreamExt;
 
 use crate::{
-  model::{Action, DownloadParam, Empty, Error, FetchParams, ImageRes},
-  store::Image,
+  model::{Action, DownloadParam, DownloadProgress, Empty, Error, FetchParams, ImageRes},
+  store::{Download, Image},
   utils::download_file,
 };
 
@@ -61,5 +63,15 @@ pub async fn close_splashscreen() -> Result<(), Error> {
   {
     tauri::invoke(&Action::CloseSplashscreen.to_string(), &Empty).await?;
     Ok(())
+  }
+}
+
+pub async fn listen_progress() {
+  #[cfg(feature = "tauri")]
+  {
+    let mut events = listen::<DownloadProgress>("progress").await.unwrap();
+    while let Some(event) = events.next().await {
+      log!(&format!("Got payload: {:?}", event.payload));
+    } 
   }
 }

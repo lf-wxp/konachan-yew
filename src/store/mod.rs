@@ -7,6 +7,7 @@ pub mod mode;
 pub mod loading;
 pub mod refresh;
 pub mod tags;
+pub mod download;
 
 pub use theme::*;
 pub use page::*;
@@ -17,6 +18,7 @@ pub use mode::*;
 pub use loading::*;
 pub use refresh::*;
 pub use tags::*;
+pub use download::*;
 
 pub trait Invertible {
   fn invert(&self) -> Self;

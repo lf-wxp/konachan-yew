@@ -10,6 +10,7 @@
         "indexmap",
         "navpage",
         "onanimationend",
+        "onchange",
         "onclick",
         "oninput",
         "onkeypress",

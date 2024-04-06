@@ -8,6 +8,8 @@ pub mod setting;
 pub mod loader;
 pub mod search;
 pub mod pending;
+pub mod download_list;
+pub mod progress;
 
 pub use background::*;
 pub use nav::*;
@@ -19,3 +21,5 @@ pub use setting::*;
 pub use loader::*;
 pub use search::*;
 pub use pending::*;
+pub use download_list::*;
+pub use progress::*;

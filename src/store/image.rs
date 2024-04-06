@@ -1,11 +1,32 @@
 use bounce::Atom;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use bounce::{BounceStates, Selector};
-use std::rc::Rc;
+use rand::{seq::SliceRandom, thread_rng};
+use std::{fmt::{self, Display}, rc::Rc};
 
 use crate::utils::{calc_waterfall, WaterfallParams};
 
 use super::{Security, Size};
+
+#[derive(PartialEq, Clone, Serialize, Deserialize, Debug, Default)]
+#[serde(rename_all = "snake_case")]
+pub enum ImageState {
+  Loaded,
+  #[default]
+  Pending,
+  Error,
+}
+
+impl Display for ImageState {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    let text = match self {
+      ImageState::Loaded => "loaded",
+      ImageState::Pending => "pending",
+      ImageState::Error => "error",
+    };
+    write!(f, "{}", text)
+  }
+}
 
 #[derive(PartialEq, Clone, Deserialize, Debug, Default)]
 pub(crate) struct Image {
@@ -29,7 +50,7 @@ pub(crate) struct Image {
 }
 
 #[derive(Atom, PartialEq, Clone, Debug, Default)]
-pub(crate) struct Images(Vec<Image>);
+pub(crate) struct Images(pub Vec<Image>);
 
 impl Images {
   pub fn value(&self) -> &Vec<Image> {
@@ -38,7 +59,9 @@ impl Images {
 }
 
 impl From<Vec<Image>> for Images {
-  fn from(value: Vec<Image>) -> Self {
+  fn from(mut value: Vec<Image>) -> Self {
+    let mut rng = thread_rng();
+    value.shuffle(&mut rng);
     Images(value)
   }
 }
