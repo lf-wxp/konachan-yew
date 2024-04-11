@@ -5,9 +5,9 @@ use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use web_sys::HtmlCanvasElement;
 use yew::Event;
 
-use crate::utils::{get_ctx, get_dpr, get_window};
+use crate::utils::{get_ctx, get_dpr, get_window, Timer};
 
-use super::{intersect_2_lines, Flag, Line, Point, Timer};
+use super::{intersect_2_lines, Flag, Line, Point};
 
 pub(crate) struct PointLine {
   canvas: Option<HtmlCanvasElement>,

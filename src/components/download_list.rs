@@ -2,11 +2,7 @@ use bounce::use_atom_value;
 use stylist::{self, style};
 use yew::prelude::*;
 
-use crate::{
-  store::Downloads,
-  utils::style,
-  components::Progress
-};
+use crate::{components::Progress, store::Downloads, utils::style};
 
 #[function_component]
 pub fn DownloadList() -> Html {
@@ -18,8 +14,7 @@ pub fn DownloadList() -> Html {
         {for downloads.value().iter().map(|item| {
         html!{
           <li class="bk-download-item">
-            <Progress status={item.status.clone()} percent={item.percent}  />
-            <img class="bk-download-image" src={item.preview.clone()} />
+            <Progress status={item.status.clone()} percent={item.percent} image={item.preview.clone()}  />
           </li>
         }})}
       </ul>
@@ -32,7 +27,7 @@ fn get_class_name() -> String {
   style::get_class_name(style!(
     r#"
       .bk-download-item {
-        block-size: 60px;
+        aspect-ratio: 16 / 9;
         position: relative;
         margin-block-end: 10px;
         border-radius: 2px;
