@@ -1,12 +1,14 @@
+use futures_util::StreamExt;
 use gloo_console::log;
 use gloo_net::http::{Headers, Request};
 use js_sys::encode_uri;
-use tauri_sys::tauri;
 use tauri_sys::event::listen;
-use futures_util::StreamExt;
+use tauri_sys::tauri;
 
 use crate::{
-  model::{Action, DownloadParam, DownloadProgress, Empty, Error, FetchParams, ImageRes},
+  model::{
+    Action, DownloadParam, DownloadProgress, Empty, Error, FetchParams, ImageData, ImageRes,
+  },
   store::{Download, Image},
   utils::download_file,
 };
@@ -36,8 +38,16 @@ pub async fn fetch_action(params: FetchParams) -> Result<ImageRes, Error> {
   {
     let json_data = include_str!("../../static/mock/post.json");
     let json: ImageRes = serde_json::from_str(json_data)?;
-    Ok(json)
+    return Ok(json);
   }
+  Ok(ImageRes {
+    code: 0,
+    msg: None,
+    data: ImageData {
+      count: 0,
+      images: vec![],
+    },
+  })
 }
 
 pub async fn download_action(item: Image) -> Result<(), Error> {
@@ -62,8 +72,9 @@ pub async fn close_splashscreen() -> Result<(), Error> {
   #[cfg(feature = "tauri")]
   {
     tauri::invoke(&Action::CloseSplashscreen.to_string(), &Empty).await?;
-    Ok(())
+    return Ok(());
   }
+  Ok(())
 }
 
 pub async fn listen_progress() {
@@ -72,6 +83,6 @@ pub async fn listen_progress() {
     let mut events = listen::<DownloadProgress>("progress").await.unwrap();
     while let Some(event) = events.next().await {
       log!(&format!("Got payload: {:?}", event.payload));
-    } 
+    }
   }
 }
