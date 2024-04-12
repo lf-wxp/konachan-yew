@@ -1,9 +1,13 @@
 use bounce::BounceRoot;
 use stylist::{self, style};
 use yew::prelude::*;
+use yew_i18n::I18nProvider;
 
-use components::{Background, DynamicWallpaper, List, Loader, Nav, Search, Service, Setting, DownloadList};
-use utils::{register_ws, style};
+use components::{
+  Background, DownloadList, DynamicWallpaper, List, Loader, Nav, NotifyProvider, Search, Service,
+  Setting,
+};
+use utils::{register_ws, style, TRANSLATIONS};
 
 mod components;
 mod hook;
@@ -14,27 +18,32 @@ mod utils;
 #[function_component]
 fn App() -> Html {
   let class_name = get_class_name();
+  let supported_languages = vec!["en", "zh"];
   #[cfg(not(feature = "tauri"))]
   {
     register_ws();
   }
   html! {
       <BounceRoot>
-        <Service />
-        <section class={class_name}>
-          <Background />
-          <DynamicWallpaper />
-          <div class={"side"}>
-            <Nav />
-            <Setting />
-            <Search />
-            <DownloadList />
-          </div>
-          <div class="content">
-            <List />
-            <Loader />
-          </div>
-        </section>
+        <NotifyProvider>
+          <I18nProvider supported_languages={supported_languages} translations={TRANSLATIONS.clone()} >
+            <Service />
+            <section class={class_name}>
+              <Background />
+              <DynamicWallpaper />
+              <div class={"side"}>
+                <Nav />
+                <Setting />
+                <Search />
+                <DownloadList />
+              </div>
+              <div class="content">
+                <List />
+                <Loader />
+              </div>
+            </section>
+            </I18nProvider>
+        </NotifyProvider>
       </BounceRoot>
   }
 }

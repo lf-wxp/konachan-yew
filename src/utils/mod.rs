@@ -6,6 +6,7 @@ pub mod pointline;
 pub mod action;
 pub mod waterfall;
 pub mod particle_progress;
+pub mod i18n;
 #[macro_use]
 pub(crate) mod create_store;
 
@@ -16,3 +17,4 @@ pub use pointline::*;
 pub use action::*;
 pub use waterfall::*;
 pub use particle_progress::*;
+pub use i18n::*;

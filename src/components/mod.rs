@@ -10,6 +10,7 @@ pub mod search;
 pub mod pending;
 pub mod download_list;
 pub mod progress;
+pub mod notify;
 
 pub use background::*;
 pub use nav::*;
@@ -23,3 +24,4 @@ pub use search::*;
 pub use pending::*;
 pub use download_list::*;
 pub use progress::*;
+pub use notify::*;
