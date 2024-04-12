@@ -34,7 +34,9 @@ pub fn Service() -> Html {
       let mode = (**mode).clone();
       loading_handle(Loading::new(true));
       spawn_local(async move {
-        match fetch_action(FetchParams::new(*page.value(), tags.value().clone(), mode)).await {
+        let result = fetch_action(FetchParams::new(*page.value(), tags.value().clone(), mode)).await;
+        loading_handle(Loading::new(false));
+        match result {
           Ok(res) => {
             images_handle(Images::from(res.data.images));
             total_handle(Total::new(res.data.count as u32));
@@ -45,7 +47,6 @@ pub fn Service() -> Html {
             notify(i18n.t("get list error"), NoticeTag::Danger, Some(3));
           }
         };
-        loading_handle(Loading::new(false));
       });
     },
   );
