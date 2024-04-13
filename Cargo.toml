@@ -60,5 +60,6 @@ yew_icons = {version = "0.8.0", features = [
   "BootstrapMoonStarsFill",
   "FontAwesomeSolidDownload",
   "BootstrapCheckCircleFill",
-  "BootstrapInfoCircleFill"
+  "BootstrapInfoCircleFill",
+  "FeatherRefreshCcw"
 ]}

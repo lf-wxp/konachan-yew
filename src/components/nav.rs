@@ -1,10 +1,14 @@
-use bounce::{use_atom, use_atom_value};
+use bounce::{use_atom, use_atom_value, use_slice};
+use gloo_console::log;
 use stylist::{self, style};
+use tauri_sys::window;
+use wasm_bindgen::{closure::Closure, JsCast};
 use yew::prelude::*;
+use yew_hooks::use_effect_once;
 
 use crate::{
-  store::{Page, Total},
-  utils::style,
+  store::{Page, PageAction},
+  utils::{get_window, style},
 };
 
 const SIZE: u32 = 4;
@@ -48,15 +52,20 @@ fn get_page_vec(page: u32, pages: u32) -> Vec<u32> {
 #[function_component]
 pub fn Nav() -> Html {
   let class_name = get_class_name();
-  let page_handle = use_atom::<Page>();
-  let page = use_atom_value::<Page>();
-  let total = use_atom_value::<Total>();
-  let page_vec = get_page_vec(*page.value(), *total.value());
+  let page = use_slice::<Page>();
+  let page_vec = get_page_vec(page.current as u32, page.total as u32);
 
-  let next = Callback::from(move |_: MouseEvent| {});
-  let prev = Callback::from(move |_: MouseEvent| {});
+  let page_clone = page.clone();
+  let next = Callback::from(move |_: MouseEvent| {
+    page_clone.dispatch(PageAction::Next);
+  });
+  let page_clone = page.clone();
+  let prev = Callback::from(move |_: MouseEvent| {
+    page_clone.dispatch(PageAction::Prev);
+  });
+  let page_clone = page.clone();
   let invoke = Callback::from(move |id: u32| {
-    page_handle.set(Page::new(id));
+    page_clone.dispatch(PageAction::Invoke(id as usize));
   });
   let goto = Callback::from(move |_: MouseEvent| {});
   let change = Callback::from(move |_: Event| {});
@@ -67,25 +76,47 @@ pub fn Nav() -> Html {
   };
 
   let bk_page_nav_prev = {
-    let param = if page.value() - 1 > 0 { "" } else { "disabled" };
+    let result = page.current.saturating_sub(1);
+    let param = if result > 0 { "" } else { "disabled" };
     format!("bk-pager_nav {}", param)
   };
 
   let bk_page_nav_next = {
-    let result = total.value().checked_sub(*page.value()).unwrap_or(0);
-    let param = if result > 0 {
-      ""
-    } else {
-      "disabled"
-    };
+    let result = page.total.saturating_sub(page.current);
+    let param = if result > 0 { "" } else { "disabled" };
     format!("bk-pager_nav {}", param)
   };
 
   let bk_page_item = |item: &u32| -> String {
-    let current = if *page.value() == *item { "current" } else { "" };
-    let size = if *page.value() >= 102 { "middle" } else { "" };
+    let current = if page.current == (*item) as usize {
+      "current"
+    } else {
+      ""
+    };
+    let size = if page.current >= 102 { "middle" } else { "" };
     format!("bk-pager_item {} {}", current, size)
   };
+
+  let page_clone = page.clone();
+  use_effect_once(move || {
+    let window = get_window();
+    let closure = Closure::<dyn Fn(_)>::new(move |e: KeyboardEvent| {
+      match e.key_code() {
+        37 => {
+          page_clone.dispatch(PageAction::Prev);
+        }
+        39 => {
+          page_clone.dispatch(PageAction::Next);
+        }
+        _ => (),
+      };
+    });
+    window
+      .add_event_listener_with_callback("keydown", closure.as_ref().unchecked_ref())
+      .ok();
+    closure.forget();
+    || {}
+  });
 
   html! {
     <section class={class_name}>
@@ -125,7 +156,7 @@ pub fn Nav() -> Html {
         <form class="bk-pager_go">
           <em class="bk-pager_go-em" />
           <div class="bk-pager_go-div">
-            <span class="bk-pager_go-span">{total.value()}</span>
+            <span class="bk-pager_go-span">{page.total}</span>
           </div>
           <div class="bk-pager_go-div">
             <input
@@ -133,7 +164,7 @@ pub fn Nav() -> Html {
               type="text"
               placeholder="page"
               name="pager"
-              value={page.value().to_string()}
+              value={page.current.to_string()}
               onchange={change}
             />
           </div>

@@ -1,5 +1,4 @@
 use futures_util::StreamExt;
-use gloo_console::log;
 use gloo_net::http::{Headers, Request};
 use js_sys::encode_uri;
 use tauri_sys::event::listen;
@@ -50,18 +49,20 @@ pub async fn fetch_action(params: FetchParams) -> Result<ImageRes, Error> {
   })
 }
 
-pub async fn download_action(item: Image) -> Result<(), Error> {
+pub async fn download_action(url: &str, name: &str) -> Result<(), Error> {
   #[cfg(not(feature = "tauri"))]
   {
-    let url = format!("/api/image?url={}", encode_uri(&item.url));
-    download_file(&url, &item.name);
+    let url = format!("/api/image?url={}", encode_uri(url));
+    download_file(&url, name);
     Ok(())
   }
   #[cfg(feature = "tauri")]
   {
     tauri::invoke(
       &Action::DownloadImage.to_string(),
-      &DownloadParam { url: item.url },
+      &DownloadParam {
+        url: url.to_string(),
+      },
     )
     .await?;
     Ok(())
@@ -77,12 +78,12 @@ pub async fn close_splashscreen() -> Result<(), Error> {
   Ok(())
 }
 
-pub async fn listen_progress() {
+pub async fn listen_progress(callback: &dyn Fn(DownloadProgress)) {
   #[cfg(feature = "tauri")]
   {
     let mut events = listen::<DownloadProgress>("progress").await.unwrap();
     while let Some(event) = events.next().await {
-      log!(&format!("Got payload: {:?}", event.payload));
+      callback(event.payload);
     }
   }
 }

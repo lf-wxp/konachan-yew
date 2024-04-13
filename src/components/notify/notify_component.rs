@@ -80,7 +80,7 @@ fn get_class_name() -> String {
           padding: 5px 10px;
           margin: auto;
           color: white;
-          background: rgba(var(--theme-color-rgb), 0.6);
+          background: rgba(var(--theme-base-color-rgb), 0.6);
           border-radius: 3px;
           backdrop-filter: blur(10px);
           inline-size: fit-content;

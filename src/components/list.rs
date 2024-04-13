@@ -1,4 +1,4 @@
-use bounce::{use_atom, use_atom_setter, use_selector_value};
+use bounce::{use_atom_setter, use_selector_value, use_slice};
 use gloo_console::log;
 use stylist::{self, style};
 use wasm_bindgen_futures::spawn_local;
@@ -8,7 +8,7 @@ use yew_icons::{Icon, IconId};
 
 use crate::{
   components::Image,
-  store::{self, Download, Downloads, FilterImages, ImageState, Size},
+  store::{self, Download, DownloadAction, Downloads, FilterImages, ImageState, Size},
   utils::{download_action, style},
 };
 
@@ -17,7 +17,7 @@ pub fn List() -> Html {
   let class_name = get_class_name();
   let images = use_selector_value::<FilterImages>();
   let size = use_atom_setter::<Size>();
-  let downloads = use_atom::<Downloads>();
+  let downloads = use_slice::<Downloads>();
   let node = use_node_ref();
   let (width, _h) = use_size(node.clone());
 
@@ -31,21 +31,20 @@ pub fn List() -> Html {
   let download = Callback::from(move |item: store::Image| {
     let downloads = downloads.clone();
     let store::Image { preview, url, .. } = item.clone();
-    spawn_local(async move {
-      #[cfg(feature = "tauri")]
-      {
-        let mut prev = downloads.value().clone();
-        prev.push(Download {
-          preview,
-          url,
-          percent: 0.0,
-          status: ImageState::Pending,
-        });
-        log!("add download list");
-        downloads.set(Downloads::from(prev));
-      }
-      let _ = download_action(item).await;
-    });
+    if !downloads.value().iter().any(|x| x.url == url) {
+      spawn_local(async move {
+        #[cfg(feature = "tauri")]
+        {
+          downloads.dispatch(DownloadAction::UnShift(Download {
+            preview,
+            url,
+            percent: 0.0,
+            status: ImageState::Pending,
+          }));
+        }
+        let _ = download_action(&item.url, &item.name).await;
+      });
+    }
   });
 
   use_effect_with(width, move |val: &u32| {
@@ -104,6 +103,7 @@ fn get_class_name() -> String {
       width: 100%;
       height: 100%;
       overflow-y: auto;
+      overflow-x: hidden;
     }
     
     .bk-list__item {

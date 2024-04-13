@@ -1,7 +1,5 @@
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
-
-use gloo_console::log;
 use wasm_bindgen::JsValue;
 use web_sys::{HtmlCanvasElement, HtmlImageElement};
 
@@ -99,9 +97,6 @@ impl ParticleProgress {
   }
   pub fn set_percent(&mut self, percent: f64) {
     self.percent = percent;
-    if percent >= 100.0 {
-      self.timer.stop();
-    }
   }
   pub fn set_image(&mut self, image: HtmlImageElement) {
     self.image = Some(image);
@@ -116,52 +111,84 @@ impl ParticleProgress {
     if alpha < 0.0 {
       self.alpha_step.set(0.02);
     }
-    if alpha >= 0.0 && alpha <= 1.0 {
+    if (0.0..=1.0).contains(&alpha) {
       self.alpha.set(alpha);
     }
   }
-  fn draw(&mut self) -> Result<(), JsValue> {
-    let canvas = self.canvas.as_ref().unwrap();
-    let image = self.image.as_ref().unwrap();
-    let ctx = get_ctx(&canvas)?;
-    let size = self.width / COLUMN as f64;
-    let per_sect_percent = 100.0 / LEN as f64;
-    let current = (self.percent / per_sect_percent).ceil();
-    ctx.clear_rect(0.0, 0.0, canvas.width().into(), canvas.height().into());
-    let dpr = get_dpr();
-    for (idx, section) in self.section.iter().enumerate() {
-      let idx = idx as f64;
-      let Section { x, y } = *section;
-      if idx < current {
-        ctx.set_global_alpha(1.0);
-        let _ = ctx.draw_image_with_html_image_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
-          &image,
-          self.ratio * x as f64,
-          self.ratio * y as f64,
-          self.ratio * size,
-          self.ratio * size,
-          x * dpr,
-          y * dpr,
-          size * dpr,
-          size * dpr,
-        );
-      }
-      if idx == current {
-        let alpha = self.alpha.get();
-        log!("color", self.color.clone());
-        ctx.set_fill_style(&JsValue::from_str(&self.color));
-        ctx.set_global_alpha(alpha);
-        self.change_alpha();
-        let _ = ctx.fill_rect(x * dpr, y * dpr, size * dpr, size * dpr);
+
+  fn draw_particle(&mut self) -> Result<(), JsValue> {
+    if self.percent < 100.0 {
+      let canvas = self.canvas.as_ref().ok_or("get canvas error")?;
+      let image = self.image.as_ref().ok_or("get image error")?;
+      let ctx = get_ctx(canvas)?;
+      let size = self.width / COLUMN as f64;
+      let per_sect_percent = 100.0 / LEN as f64;
+      let current = (self.percent / per_sect_percent).ceil();
+      let dpr = get_dpr();
+      ctx.clear_rect(0.0, 0.0, canvas.width().into(), canvas.height().into());
+      for (idx, section) in self.section.iter().enumerate() {
+        let idx = idx as f64;
+        let Section { x, y } = *section;
+        if idx < current {
+          ctx.set_global_alpha(1.0);
+          let _ = ctx.draw_image_with_html_image_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
+            image,
+            self.ratio * x,
+            self.ratio * y,
+            self.ratio * size,
+            self.ratio * size,
+            x * dpr,
+            y * dpr,
+            size * dpr,
+            size * dpr,
+          );
+        }
+        if idx == current {
+          let alpha = self.alpha.get();
+          ctx.set_fill_style(&JsValue::from_str(&self.color));
+          ctx.set_global_alpha(alpha);
+          self.change_alpha();
+          ctx.fill_rect(x * dpr, y * dpr, size * dpr, size * dpr);
+        }
       }
     }
     Ok(())
   }
+
+  fn draw_full(&mut self) -> Result<(), JsValue> {
+    if self.percent >= 100.0 {
+      let canvas = self.canvas.as_ref().ok_or("get canvas error")?;
+      let image = self.image.as_ref().ok_or("get image error")?;
+      let dpr = get_dpr();
+      let ctx = get_ctx(canvas)?;
+      ctx.clear_rect(0.0, 0.0, canvas.width().into(), canvas.height().into());
+      ctx.set_global_alpha(1.0);
+      let _ = ctx.draw_image_with_html_image_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
+        image,
+        0.0,
+        0.0,
+        self.width * self.ratio,
+        self.height * self.ratio,
+        0.0,
+        0.0,
+        self.width * dpr,
+        self.height * dpr,
+      );
+      self.timer.stop();
+    };
+    Ok(())
+  }
+
+  fn draw(&mut self) -> Result<(), JsValue> {
+    self.draw_particle().unwrap();
+    self.draw_full().unwrap();
+    Ok(())
+  }
   fn subscribe(&self) {
-    if let Some(pointline) = &self.this {
-      let pointline = pointline.clone();
+    if let Some(progress) = &self.this {
+      let progress = progress.clone();
       self.timer.subscribe(move || {
-        let _ = pointline.borrow_mut().draw();
+        let _ = progress.borrow_mut().draw();
       });
     }
   }
@@ -169,6 +196,14 @@ impl ParticleProgress {
     self.calc_ratio();
     self.create_section();
     self.subscribe();
+  }
+
+  pub fn start(&mut self) {
     self.timer.start();
+    self.set_percent(0.0);
+  }
+
+  pub fn stop(&self) {
+    self.timer.stop();
   }
 }

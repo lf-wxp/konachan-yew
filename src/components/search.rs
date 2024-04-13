@@ -1,10 +1,10 @@
-use bounce::use_atom_setter;
+use bounce::{use_atom_setter, use_slice};
 use stylist::{self, style};
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
 use crate::{
-  store::{Page, Tags, Total},
+  store::{Page, PageAction, Tags},
   utils::{get_target, style},
 };
 
@@ -12,8 +12,7 @@ use crate::{
 pub fn Search() -> Html {
   let class_name = get_class_name();
   let tags = use_atom_setter::<Tags>();
-  let page = use_atom_setter::<Page>();
-  let total = use_atom_setter::<Total>();
+  let page = use_slice::<Page>();
   let value = use_state(|| "".to_string());
   let value_clone = value.clone();
 
@@ -26,8 +25,8 @@ pub fn Search() -> Html {
   let onkeypress = {
     let value_clone = value.clone();
     Callback::from(move |_: KeyboardEvent| {
-      total(Total::new(0));
-      page(Page::new(1));
+      page.dispatch(PageAction::Total(0));
+      page.dispatch(PageAction::Invoke(1));
       tags(Tags::new((*value_clone).clone()));
     })
   };
@@ -58,6 +57,7 @@ fn get_class_name() -> String {
       padding: 0 5px;
       outline: none;
       margin-block-end: 10px;
+      flex: 0 0  auto;
     "#
   ))
 }
