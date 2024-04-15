@@ -13,7 +13,7 @@ use crate::{
 };
 
 pub async fn fetch_action(params: FetchParams) -> Result<ImageRes, Error> {
-  #[cfg(feature = "web")]
+  #[cfg(any(feature = "web", feature = "safe"))]
   {
     let url = "/api/post";
     let query = params.param();
