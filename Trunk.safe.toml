@@ -1,0 +1,9 @@
+[serve]
+port = 8888
+
+[build]
+dist = "dist_safe"
+
+[[proxy]]
+backend = "http://localhost:8000/"
+rewrite = "/api/"

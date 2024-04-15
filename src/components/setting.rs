@@ -37,33 +37,47 @@ pub fn Setting() -> Html {
     refresh.set(refresh.invert());
   });
 
-  let is_tauri = true;
+  let mut is_tauri = false;
+  let mut is_safe = false;
+
+  #[cfg(feature = "tauri")]
+  {
+    is_tauri = true;
+  }
+  #[cfg(feature = "safe")]
+  {
+    is_safe = true;
+  }
+
+
   html! {
     <section class={class_name}>
-    <article class={active_class}>
-      <label class="bk-setting__toggle" onclick={security_click}>
-        <span class="bk-setting__fake animation" />
-      </label>
-    </article>
-     if is_tauri {
+      if !is_safe {
+        <article class={active_class}>
+          <label class="bk-setting__toggle" onclick={security_click}>
+            <span class="bk-setting__fake animation" />
+          </label>
+        </article>
+      }
+      if is_tauri {
+        <article
+          class={mode_class}
+          onclick={mode_click}
+        >
+          <span class="bk-mode__toggle animation"/>
+        </article>
+      }
       <article
-        class={mode_class}
-        onclick={mode_click}
+        class={loading_class}
+        onclick={refresh_click}
       >
-        <span class="bk-mode__toggle animation"/>
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
       </article>
-    }
-    <article
-      class={loading_class}
-      onclick={refresh_click}
-    >
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-    </article>
-  </section>
+    </section>
   }
 }
 
