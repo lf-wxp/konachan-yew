@@ -1,7 +1,7 @@
 use bounce::Atom;
 
 #[derive(Atom, PartialEq, Debug)]
-pub struct ThemeColor {
+pub(crate) struct ThemeColor {
   pub theme_color: String,
   pub primary_color: String,
   pub ancillary_color: String,

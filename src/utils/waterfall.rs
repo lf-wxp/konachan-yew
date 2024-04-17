@@ -1,13 +1,5 @@
 use crate::store::Image;
 
-pub(crate) struct UseWaterfallProps {
-  security: bool,
-  width: f64,
-  images: Vec<Image>,
-  max_width: f64,
-  min_width: f64,
-}
-
 fn shortest_column_pure(col_array: &[f64]) -> (f64, usize) {
   if col_array.is_empty() {
     return (0.0, 0);
@@ -100,7 +92,7 @@ pub(crate) struct WaterfallParams {
   pub(crate) images: Vec<Image>,
 }
 
-pub(crate) fn calc_waterfall(params: WaterfallParams) -> Vec<Image> {
+pub fn calc_waterfall(params: WaterfallParams) -> Vec<Image> {
   let WaterfallParams {
     security,
     width,

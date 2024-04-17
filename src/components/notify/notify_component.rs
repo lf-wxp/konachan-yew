@@ -72,69 +72,69 @@ pub fn Notify() -> Html {
 fn get_class_name() -> String {
   style::get_class_name(style!(
     r#"
-        position: fixed;
-        inset-block-start: 20px;
-        inset-inline: 0;
-        
-        .notice {
-          padding: 5px 10px;
-          margin: auto;
-          color: white;
-          background: rgba(var(--theme-base-color-rgb), 0.6);
-          border-radius: 3px;
-          backdrop-filter: blur(10px);
-          inline-size: fit-content;
-          min-inline-size: 100px;
-          text-align: center;
-          margin-block-end: 10px;
-          transition: all 0.2s ease;
-          animation: fadeIn 0.2s;
-          display: flex;
-          align-items: center;
-          font-size: 14px;
-        }
-        .perish {
-          animation: fadeOut 0.2s;
-        }
-        .icon {
-          margin-inline-end: 5px;
-          opacity: 0.8;
-        }
-        .icon.danger {
-          color: var(--danger-color);
-        }
-        .icon.warning {
-          color: var(--warning-color);
-        }
-        .icon.info {
-          color: var(--info-color);
-        }
-        .icon.success {
-          color: var(--success-color);
-        }
+      position: fixed;
+      inset-block-start: 20px;
+      inset-inline: 0;
+      
+      .notice {
+        padding: 5px 10px;
+        margin: auto;
+        color: white;
+        background: rgba(var(--theme-base-color-rgb), 0.6);
+        border-radius: 3px;
+        backdrop-filter: blur(10px);
+        inline-size: fit-content;
+        min-inline-size: 100px;
+        text-align: center;
+        margin-block-end: 10px;
+        transition: all 0.2s ease;
+        animation: fadeIn 0.2s;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+      }
+      .perish {
+        animation: fadeOut 0.2s;
+      }
+      .icon {
+        margin-inline-end: 5px;
+        opacity: 0.8;
+      }
+      .icon.danger {
+        color: var(--danger-color);
+      }
+      .icon.warning {
+        color: var(--warning-color);
+      }
+      .icon.info {
+        color: var(--info-color);
+      }
+      .icon.success {
+        color: var(--success-color);
+      }
 
-        @keyframes fadeIn {
-          0% {
-            opacity: 0;
-            transform: translateY(-50%);
-          } 
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          } 
-        }
-        @keyframes fadeOut {
-          0% {
-            opacity: 1;
-            transform: translateY(0);
-            margin-block-end: 10px;
-          } 
-          100% {
-            opacity: 0;
-            transform: translateY(-50%);
-            margin-block-end: -28px;
-          } 
-        }
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(-50%);
+        } 
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        } 
+      }
+      @keyframes fadeOut {
+        0% {
+          opacity: 1;
+          transform: translateY(0);
+          margin-block-end: 10px;
+        } 
+        100% {
+          opacity: 0;
+          transform: translateY(-50%);
+          margin-block-end: -28px;
+        } 
+      }
     "#
   ))
 }

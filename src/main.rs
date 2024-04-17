@@ -52,28 +52,28 @@ fn App() -> Html {
 fn get_class_name() -> String {
   style::get_class_name(style!(
     r#"
-        block-size: 100vh;
-        overflow: hidden;
-        display: grid;
-        grid-template-columns: 120px auto;
-        grid-template-rows: 100%;
-        grid-auto-flow: column;
+      block-size: 100vh;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 120px auto;
+      grid-template-rows: 100%;
+      grid-auto-flow: column;
 
-        .side {
-          position: relative;
-          background: color(var(--theme-base-color) alpha(20%));
-          backdrop-filter: blur(5px);
-          padding: 0 6px;
-          display: flex;
-          flex-flow: column nowrap;
-        }
-        .side > section  {
-          margin-block-end: 10px;
-        }
-        
-        .content {
-          position: relative;
-        }
+      .side {
+        position: relative;
+        background: color(var(--theme-base-color) alpha(20%));
+        backdrop-filter: blur(5px);
+        padding: 0 6px;
+        display: flex;
+        flex-flow: column nowrap;
+      }
+      .side > section  {
+        margin-block-end: 10px;
+      }
+      
+      .content {
+        position: relative;
+      }
     "#
   ))
 }

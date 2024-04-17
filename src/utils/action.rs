@@ -8,7 +8,6 @@ use crate::{
   model::{
     Action, DownloadParam, DownloadProgress, Empty, Error, FetchParams, ImageData, ImageRes,
   },
-  store::{Download, Image},
   utils::download_file,
 };
 

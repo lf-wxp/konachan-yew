@@ -3,6 +3,6 @@ pub mod pointline;
 pub mod point;
 pub mod line;
 
-pub use pointline::*;
-pub use point::*;
-pub use line::*;
+pub(crate) use pointline::*;
+pub(crate) use point::*;
+pub(crate) use line::*;

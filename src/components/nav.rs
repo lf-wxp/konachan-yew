@@ -1,7 +1,5 @@
-use bounce::{use_atom, use_atom_value, use_slice};
-use gloo_console::log;
+use bounce::use_slice;
 use stylist::{self, style};
-use tauri_sys::window;
 use wasm_bindgen::{closure::Closure, JsCast};
 use yew::prelude::*;
 use yew_hooks::use_effect_once;
@@ -182,367 +180,367 @@ pub fn Nav() -> Html {
 fn get_class_name() -> String {
   style::get_class_name(style!(
     r#"
-    .bk-pager {
-      flex: 0 0 auto;
-      width: calc(3 * var(--theme-page-item-size));
-      height: calc(3 * var(--theme-page-item-size));
-      position: relative;
-      z-index: 2;
-      font-family: ZagRegular;
-    }
-    
-    .bk-pager.active {
-      animation: none;
-    }
-    
-    .bk-pager.active .bk-pager_nav:first-of-type {
-      transform: translate(-100%, 100%);
-    }
-    
-    .bk-pager.active .bk-pager_nav:last-of-type {
-      transform: translate(100%, -100%);
-    }
-    
-    .bk-pager.active .bk-pager_go .bk-pager_go-div:first-of-type {
-      left: var(--theme-page-item-size);
-      top: 0px;
-    }
-    
-    .bk-pager.active .bk-pager_go .bk-pager_go-div:last-of-type {
-      top: var(--theme-page-item-size);
-      left: 0px;
-      transition-delay: 0.1s;
-    }
-    
-    .bk-pager.active .bk-pager_go .bk-pager_btn {
-      top: var(--theme-page-item-size);
-      left: var(--theme-page-item-size);
-      transition-delay: 0.2s;
-    }
-    
-    .bk-pager.active .bk-pager_holder {
-      visibility: hidden;
-      opacity: 0;
-    }
-    
-    .bk-pager.active .bk-pager_item:nth-child(1) {
-      left: 0px;
-      top: 0px;
-    }
+      .bk-pager {
+        flex: 0 0 auto;
+        width: calc(3 * var(--theme-page-item-size));
+        height: calc(3 * var(--theme-page-item-size));
+        position: relative;
+        z-index: 2;
+        font-family: ZagRegular;
+      }
+      
+      .bk-pager.active {
+        animation: none;
+      }
+      
+      .bk-pager.active .bk-pager_nav:first-of-type {
+        transform: translate(-100%, 100%);
+      }
+      
+      .bk-pager.active .bk-pager_nav:last-of-type {
+        transform: translate(100%, -100%);
+      }
+      
+      .bk-pager.active .bk-pager_go .bk-pager_go-div:first-of-type {
+        left: var(--theme-page-item-size);
+        top: 0px;
+      }
+      
+      .bk-pager.active .bk-pager_go .bk-pager_go-div:last-of-type {
+        top: var(--theme-page-item-size);
+        left: 0px;
+        transition-delay: 0.1s;
+      }
+      
+      .bk-pager.active .bk-pager_go .bk-pager_btn {
+        top: var(--theme-page-item-size);
+        left: var(--theme-page-item-size);
+        transition-delay: 0.2s;
+      }
+      
+      .bk-pager.active .bk-pager_holder {
+        visibility: hidden;
+        opacity: 0;
+      }
+      
+      .bk-pager.active .bk-pager_item:nth-child(1) {
+        left: 0px;
+        top: 0px;
+      }
 
-    .bk-pager.active .bk-pager_item:nth-child(2) {
-      left: var(--theme-page-item-size);
-      top: 0px;
-      transition-delay: 0.1s;
-    }
-    
-    .bk-pager.active .bk-pager_item:nth-child(3) {
-      left: 0px;
-      top: var(--theme-page-item-size);
-      transition-delay: 0.2s;
-    }
-    
-    .bk-pager_nav {
-      width: var(--theme-page-item-size);
-      height: var(--theme-page-item-size);
-      position: absolute;
-      display: inline-block;
-      color: white;
-      font-size: 30px;
-      line-height: 40px;
-      text-align: center;
-      background-color: var(--theme-page-nav-bg-color);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      bottom: var(--theme-page-item-size);
-      left: var(--theme-page-item-size);
-    }
-    
-    .bk-pager_nav:hover:after,.bk-pager_nav:hover:before {
-      background: var(--theme-page-item-hover-color) !important;
-    }
-    
-    .bk-pager_nav svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    
-    .bk-pager_nav:after,.bk-pager_nav:before {
-      transition: all 0.2s ease;
-    }
-    
-    .bk-pager_nav:nth-of-type(1):after {
-      content: '';
-      position: absolute;
-      left: 5px;
-      bottom: 0;
-      height: 5px;
-      width: calc(100% - 5px);
-      background: var(--theme-page-item-hover-color);
-    }
-    
-    .bk-pager_nav:nth-of-type(1):before {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      height: 100%;
-      width: 5px;
-      background: var(--theme-page-item-hover-color);
-    }
-    
-    .bk-pager_nav:nth-of-type(2):after {
-      content: '';
-      position: absolute;
-      right: 5px;
-      top: 0;
-      height: 5px;
-      width: calc(100% - 5px);
-      background: var(--theme-page-item-hover-color);
-    }
+      .bk-pager.active .bk-pager_item:nth-child(2) {
+        left: var(--theme-page-item-size);
+        top: 0px;
+        transition-delay: 0.1s;
+      }
+      
+      .bk-pager.active .bk-pager_item:nth-child(3) {
+        left: 0px;
+        top: var(--theme-page-item-size);
+        transition-delay: 0.2s;
+      }
+      
+      .bk-pager_nav {
+        width: var(--theme-page-item-size);
+        height: var(--theme-page-item-size);
+        position: absolute;
+        display: inline-block;
+        color: white;
+        font-size: 30px;
+        line-height: 40px;
+        text-align: center;
+        background-color: var(--theme-page-nav-bg-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        bottom: var(--theme-page-item-size);
+        left: var(--theme-page-item-size);
+      }
+      
+      .bk-pager_nav:hover:after,.bk-pager_nav:hover:before {
+        background: var(--theme-page-item-hover-color) !important;
+      }
+      
+      .bk-pager_nav svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      
+      .bk-pager_nav:after,.bk-pager_nav:before {
+        transition: all 0.2s ease;
+      }
+      
+      .bk-pager_nav:nth-of-type(1):after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        bottom: 0;
+        height: 5px;
+        width: calc(100% - 5px);
+        background: var(--theme-page-item-hover-color);
+      }
+      
+      .bk-pager_nav:nth-of-type(1):before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 100%;
+        width: 5px;
+        background: var(--theme-page-item-hover-color);
+      }
+      
+      .bk-pager_nav:nth-of-type(2):after {
+        content: '';
+        position: absolute;
+        right: 5px;
+        top: 0;
+        height: 5px;
+        width: calc(100% - 5px);
+        background: var(--theme-page-item-hover-color);
+      }
 
-    .bk-pager_nav:nth-of-type(2):before {
-      content: '';
-      position: absolute;
-      right: 0;
-      top: 0;
-      height: 100%;
-      width: 5px;
-      background: var(--theme-page-item-hover-color);
-    }
-    
-    .bk-pager_nav.disabled {
-      pointer-events: none;
-      cursor: not-allowed;
-    }
-    
-    .bk-pager_holder {
-      width: var(--theme-page-item-size);
-      height: var(--theme-page-item-size);
-      position: absolute;
-      background-color: var(--theme-base-color);
-      z-index: 3;
-      left: var(--theme-page-item-size);
-      top: var(--theme-page-item-size);
-      cursor: pointer;
-      transition: all 0.2s 0.5s ease-in-out;
-      animation: breathPage 2s 4s ease-in-out alternate infinite;
-    }
-    
-    .bk-pager_holder:after,.bk-pager_holder:before {
-      content: '';
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      margin: auto;
-      position: absolute;
-    }
-  
-    .bk-pager_holder:after {
-      width: 40%;
-      height: 40%;
-      background-color: var(--theme-page-item-breath-color2);
-      animation: breathPage2 2s ease-in-out alternate infinite;
-    }
-    
-    .bk-pager_holder:before {
-      width: 70%;
-      height: 70%;
-      background-color: var(--theme-page-item-breath-color1);
-      animation: breathPage1 2s 2s ease-in-out alternate infinite;
-    }
-    
-    .bk-pager_con {
-      width: calc(2 * var(--theme-page-item-size));
-      height: calc(2 * var(--theme-page-item-size));
-      position: absolute;
-      left: 0px;
-      top: 0px;
-      z-index: 2;
-    }
-    
-    .bk-pager_box {
-      width: 100%;
-      height: 100%;
-      font-size: 0px;
-      position: relative;
-    }
-    
-    .bk-pager_item-text {
-      display: block;
-      width: 100%;
-      height: 100%;
-      font-family: ZagRegular;
-      line-height: var(--theme-page-item-size);
-      color: var(--theme-base-color);
-      letter-spacing: 2px;
-    }
-    
-    .bk-pager_item {
-      position: absolute;
-      color: white;
-      font-size: 20px;
-      width: var(--theme-page-item-size);
-      height: var(--theme-page-item-size);
-      left: var(--theme-page-item-size);
-      top: var(--theme-page-item-size);
-      line-height: 40px;
-      text-align: center;
-      background-color: var(--theme-page-nav-bg-color);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    
-    .bk-pager_item:hover,.bk-pager_item.current {
-      background-color: var(--theme-page-item-hover-color);
-    }
-    
-    .bk-pager_item.current {
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-    
-    .bk-pager_item.middle {
-      font-size: 14px;
-    }
-    
-    .bk-pager_go {
-      width: 2 * var(--theme-page-item-size);
-      height: 2 * var(--theme-page-item-size);
-      position: absolute;
-      font-size: 0px;
-      left: var(--theme-page-item-size);
-      top: var(--theme-page-item-size);
-      z-index: 1;
-    }
-    
-    .bk-pager_go-span,
-    .bk-pager_go-input {
-      text-align: center;
-      font-size: 20px;
-      font-family: ZagRegular;
-      display: block;
-      color: white;
-      width: 100%;
-      height: 100%;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      border: none;
-      background: none;
-    }
-    
-    .bk-pager_go-span::placeholder {
-      color: var(--theme-base-color);
-    }
-    
-    .bk-pager_go-input::placeholder {
-      color: var(--theme-base-color);
-    }
-    
-    .bk-pager_go-span {
-      font-size: 12px;
-      line-height: var(--theme-page-item-size);
-      text-overflow: ellipsis;
-      overflow: hidden;
-      color: var(--theme-base-color);
-      white-space: nowrap;
-    }
-    
-    .bk-pager_go-input {
-      color: white;
-      font-size: 14px;
-      outline: none;
-      box-sizing: border-box;
-      border-bottom: 4px solid var(--theme-base-color);
-      color: var(--theme-base-color);
-    }
-    
-    .bk-pager_go-input.animation {
-      animation: blink 1s ease-in-out infinite alternate-reverse both;
-    }
-    
-    .bk-pager_go-em,
-    .bk-pager_go-div,
-    .bk-pager_btn {
-      width: var(--theme-page-item-size);
-      height: var(--theme-page-item-size);
-      box-sizing: border-box;
-      display: inline-block;
-      position: absolute;
-      margin: auto;
-      border: none;
-      left: 0;
-      top: 0;
-      vertical-align: top;
-      color: var(--theme-base-color);
-      background-color: var(--theme-page-nav-bg-color);
-      transition: all 0.2s ease;
-    }
-    
-    .bk-pager_go-em {
-      background: none;
-    }
-    
-    .bk-pager_btn {
-      margin: 0;
-      padding: 0;
-      cursor: pointer;
-    }
-    
-    .bk-pager_btn:hover {
-      background-color: var(--theme-page-item-hover-color);
-    }
-    
-    .bk-pager_btn span {
-      width: 40%;
-      height: 40%;
-      display: block;
-      background: var(--theme-base-color);
-      position: absolute;
-      right: 0;
-      bottom: 0;
-    }
-    
-    @keyframes breathPage {
-      0% {
+      .bk-pager_nav:nth-of-type(2):before {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 5px;
+        background: var(--theme-page-item-hover-color);
+      }
+      
+      .bk-pager_nav.disabled {
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+      
+      .bk-pager_holder {
+        width: var(--theme-page-item-size);
+        height: var(--theme-page-item-size);
+        position: absolute;
         background-color: var(--theme-base-color);
+        z-index: 3;
+        left: var(--theme-page-item-size);
+        top: var(--theme-page-item-size);
+        cursor: pointer;
+        transition: all 0.2s 0.5s ease-in-out;
+        animation: breathPage 2s 4s ease-in-out alternate infinite;
       }
-      100% {
-        background-color: var(--theme-page-item-breath-color2);
+      
+      .bk-pager_holder:after,.bk-pager_holder:before {
+        content: '';
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: auto;
+        position: absolute;
       }
-    }
     
-    @keyframes breathPage1 {
-      0% {
+      .bk-pager_holder:after {
+        width: 40%;
+        height: 40%;
+        background-color: var(--theme-page-item-breath-color2);
+        animation: breathPage2 2s ease-in-out alternate infinite;
+      }
+      
+      .bk-pager_holder:before {
+        width: 70%;
+        height: 70%;
         background-color: var(--theme-page-item-breath-color1);
+        animation: breathPage1 2s 2s ease-in-out alternate infinite;
       }
-      50% {
-        background-color: var(--theme-page-item-breath-color2);
+      
+      .bk-pager_con {
+        width: calc(2 * var(--theme-page-item-size));
+        height: calc(2 * var(--theme-page-item-size));
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        z-index: 2;
       }
-      100% {
-        background-color: var(--theme-base-color);
+      
+      .bk-pager_box {
+        width: 100%;
+        height: 100%;
+        font-size: 0px;
+        position: relative;
       }
-    }
-    
-    @keyframes breathPage2 {
-      0% {
-        background-color: var(--theme-page-item-breath-color2);
+      
+      .bk-pager_item-text {
+        display: block;
+        width: 100%;
+        height: 100%;
+        font-family: ZagRegular;
+        line-height: var(--theme-page-item-size);
+        color: var(--theme-base-color);
+        letter-spacing: 2px;
       }
-      100% {
-        background-color: var(--theme-base-color);
+      
+      .bk-pager_item {
+        position: absolute;
+        color: white;
+        font-size: 20px;
+        width: var(--theme-page-item-size);
+        height: var(--theme-page-item-size);
+        left: var(--theme-page-item-size);
+        top: var(--theme-page-item-size);
+        line-height: 40px;
+        text-align: center;
+        background-color: var(--theme-page-nav-bg-color);
+        cursor: pointer;
+        transition: all 0.2s ease;
       }
-    }
-    
-    @keyframes blink {
-      0% {
-        border-color: transparent;
+      
+      .bk-pager_item:hover,.bk-pager_item.current {
+        background-color: var(--theme-page-item-hover-color);
       }
-      100% {
-        border-color: var(--theme-base-color);
+      
+      .bk-pager_item.current {
+        cursor: not-allowed;
+        pointer-events: none;
       }
-    }
+      
+      .bk-pager_item.middle {
+        font-size: 14px;
+      }
+      
+      .bk-pager_go {
+        width: 2 * var(--theme-page-item-size);
+        height: 2 * var(--theme-page-item-size);
+        position: absolute;
+        font-size: 0px;
+        left: var(--theme-page-item-size);
+        top: var(--theme-page-item-size);
+        z-index: 1;
+      }
+      
+      .bk-pager_go-span,
+      .bk-pager_go-input {
+        text-align: center;
+        font-size: 20px;
+        font-family: ZagRegular;
+        display: block;
+        color: white;
+        width: 100%;
+        height: 100%;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border: none;
+        background: none;
+      }
+      
+      .bk-pager_go-span::placeholder {
+        color: var(--theme-base-color);
+      }
+      
+      .bk-pager_go-input::placeholder {
+        color: var(--theme-base-color);
+      }
+      
+      .bk-pager_go-span {
+        font-size: 12px;
+        line-height: var(--theme-page-item-size);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: var(--theme-base-color);
+        white-space: nowrap;
+      }
+      
+      .bk-pager_go-input {
+        color: white;
+        font-size: 14px;
+        outline: none;
+        box-sizing: border-box;
+        border-bottom: 4px solid var(--theme-base-color);
+        color: var(--theme-base-color);
+      }
+      
+      .bk-pager_go-input.animation {
+        animation: blink 1s ease-in-out infinite alternate-reverse both;
+      }
+      
+      .bk-pager_go-em,
+      .bk-pager_go-div,
+      .bk-pager_btn {
+        width: var(--theme-page-item-size);
+        height: var(--theme-page-item-size);
+        box-sizing: border-box;
+        display: inline-block;
+        position: absolute;
+        margin: auto;
+        border: none;
+        left: 0;
+        top: 0;
+        vertical-align: top;
+        color: var(--theme-base-color);
+        background-color: var(--theme-page-nav-bg-color);
+        transition: all 0.2s ease;
+      }
+      
+      .bk-pager_go-em {
+        background: none;
+      }
+      
+      .bk-pager_btn {
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+      }
+      
+      .bk-pager_btn:hover {
+        background-color: var(--theme-page-item-hover-color);
+      }
+      
+      .bk-pager_btn span {
+        width: 40%;
+        height: 40%;
+        display: block;
+        background: var(--theme-base-color);
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+      
+      @keyframes breathPage {
+        0% {
+          background-color: var(--theme-base-color);
+        }
+        100% {
+          background-color: var(--theme-page-item-breath-color2);
+        }
+      }
+      
+      @keyframes breathPage1 {
+        0% {
+          background-color: var(--theme-page-item-breath-color1);
+        }
+        50% {
+          background-color: var(--theme-page-item-breath-color2);
+        }
+        100% {
+          background-color: var(--theme-base-color);
+        }
+      }
+      
+      @keyframes breathPage2 {
+        0% {
+          background-color: var(--theme-page-item-breath-color2);
+        }
+        100% {
+          background-color: var(--theme-base-color);
+        }
+      }
+      
+      @keyframes blink {
+        0% {
+          border-color: transparent;
+        }
+        100% {
+          border-color: var(--theme-base-color);
+        }
+      }
     "#
   ))
 }

@@ -1,13 +1,13 @@
 use bounce::use_atom_setter;
+use gloo_timers::future::TimeoutFuture;
 use stylist::{self, style};
 use wasm_bindgen_futures::spawn_local;
 use web_sys::HtmlImageElement;
 use yew::{function_component, html, Callback, Event, Html};
-use gloo_timers::future::TimeoutFuture;
 
 use crate::{
   store::ThemeColor,
-  utils::{bare_rgb, get_html_image_to_vec, get_target, random, style, close_splashscreen},
+  utils::{bare_rgb, close_splashscreen, get_html_image_to_vec, get_target, random, style},
 };
 
 #[function_component]
@@ -49,16 +49,16 @@ pub fn Background() -> Html {
 fn get_class_name() -> String {
   style::get_class_name(style!(
     r#"
-        block-size: 100%;
-        inline-size: 100%;
-        position: fixed;
-        z-index: -1;
-        inset-block: 0;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
+      block-size: 100%;
+      inline-size: 100%;
+      position: fixed;
+      z-index: -1;
+      inset-block: 0;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     "#
   ))
 }

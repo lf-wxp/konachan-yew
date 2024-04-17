@@ -1,5 +1,5 @@
 use bounce::Slice;
-use std::{default, rc::Rc};
+use std::rc::Rc;
 use yew::Reducible;
 
 pub enum PageAction {

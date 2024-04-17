@@ -1,4 +1,7 @@
-use crate::{model::DownloadProgress, store::{DownloadAction, Downloads}};
+use crate::{
+  model::DownloadProgress,
+  store::{DownloadAction, Downloads},
+};
 use bounce::use_slice;
 use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;

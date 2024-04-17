@@ -1,4 +1,3 @@
-
 #[macro_export]
 macro_rules! create_store {
   ($name:ident, $inner_type:ty, $default_value:expr) => {

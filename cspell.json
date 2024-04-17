@@ -1,1 +1,26 @@
-{"words":["animationedn","animationend","bezier","bindgen","chrono","getrandom","gloo","indexmap","navpage","onanimationend","onchange","onclick","oninput","onkeypress","serde","tauri","konachan"],"version":"0.2","language":"en","flagWords":[]}
+{
+    "words": [
+        "animationedn",
+        "animationend",
+        "bezier",
+        "bindgen",
+        "chrono",
+        "getrandom",
+        "gloo",
+        "indexmap",
+        "keydown",
+        "konachan",
+        "mousemove",
+        "navpage",
+        "onanimationend",
+        "onchange",
+        "onclick",
+        "oninput",
+        "onkeypress",
+        "serde",
+        "tauri"
+    ],
+    "version": "0.2",
+    "language": "en",
+    "flagWords": []
+}

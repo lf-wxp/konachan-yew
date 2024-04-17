@@ -49,7 +49,6 @@ pub fn Setting() -> Html {
     is_safe = true;
   }
 
-
   html! {
     <section class={class_name}>
       if !is_safe {

@@ -3,8 +3,8 @@ use std::fmt::{self, Display, Formatter};
 
 use crate::store::{Image, ImageState, Mode};
 
-pub type Error = Box<dyn std::error::Error>;
-pub type UResult<T> = std::result::Result<T, Error>;
+pub(crate) type Error = Box<dyn std::error::Error>;
+pub(crate) type UResult<T> = std::result::Result<T, Error>;
 
 #[derive(PartialEq, Clone, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -22,7 +22,7 @@ pub(crate) struct ImageRes {
 
 #[derive(PartialEq, Clone, Serialize, Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
-pub enum Action {
+pub(crate) enum Action {
   GetPost,
   DownloadImage,
   CloseSplashscreen,
@@ -40,7 +40,7 @@ impl Display for Action {
 }
 
 #[derive(PartialEq, Clone, Serialize, Deserialize, Debug)]
-pub struct FetchParams {
+pub(crate) struct FetchParams {
   page: u32,
   tags: String,
   mode: Mode,
@@ -73,15 +73,15 @@ impl FetchParams {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Empty;
+pub(crate) struct Empty;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct DownloadParam {
+pub(crate) struct DownloadParam {
   pub url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct DownloadProgress {
+pub(crate) struct DownloadProgress {
   pub url: String,
   pub percent: f32,
   pub status: ImageState,

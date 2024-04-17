@@ -5,7 +5,7 @@ use std::fmt::{self, Display, Formatter};
 use super::Invertible;
 
 #[derive(Atom, PartialEq, Serialize, Deserialize, Default, Clone, Debug)]
-pub enum Mode {
+pub(crate) enum Mode {
   #[default]
   Json,
   Xml,

@@ -2,10 +2,7 @@ use bounce::use_atom_value;
 use stylist::{self, style};
 use yew::prelude::*;
 
-use crate::{
-  store::Loading,
-  utils::style,
-};
+use crate::{store::Loading, utils::style};
 
 #[function_component]
 pub fn Loader() -> Html {

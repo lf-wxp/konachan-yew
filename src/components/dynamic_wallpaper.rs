@@ -53,17 +53,17 @@ pub fn DynamicWallpaper() -> Html {
 fn get_class_name() -> String {
   style::get_class_name(style!(
     r#"
+      block-size: 100%;
+      inline-size: 100%;
+      position: fixed;
+      z-index: -1;
+      inset-block: 0;
+
+      canvas {
         block-size: 100%;
         inline-size: 100%;
-        position: fixed;
-        z-index: -1;
-        inset-block: 0;
-
-        canvas {
-          block-size: 100%;
-          inline-size: 100%;
-          transition: background 0.2s ease;
-        }
+        transition: background 0.2s ease;
+      }
     "#
   ))
 }

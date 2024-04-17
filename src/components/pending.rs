@@ -8,7 +8,6 @@ pub struct Props {
   pub visible: bool,
 }
 
-
 #[function_component]
 pub fn Pending(props: &Props) -> Html {
   let class_name = get_class_name();

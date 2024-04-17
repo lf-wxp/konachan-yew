@@ -1,8 +1,11 @@
 use bounce::Atom;
-use serde::{Deserialize, Serialize};
 use bounce::{BounceStates, Selector};
 use rand::{seq::SliceRandom, thread_rng};
-use std::{fmt::{self, Display}, rc::Rc};
+use serde::{Deserialize, Serialize};
+use std::{
+  fmt::{self, Display},
+  rc::Rc,
+};
 
 use crate::utils::{calc_waterfall, WaterfallParams};
 
@@ -10,7 +13,7 @@ use super::{Security, Size};
 
 #[derive(PartialEq, Clone, Serialize, Deserialize, Debug, Default)]
 #[serde(rename_all = "snake_case")]
-pub enum ImageState {
+pub(crate) enum ImageState {
   Loaded,
   #[default]
   Pending,

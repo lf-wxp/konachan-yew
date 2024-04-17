@@ -15,7 +15,7 @@ pub(crate) struct Download {
   pub status: ImageState,
 }
 
-pub enum DownloadAction {
+pub(crate) enum DownloadAction {
   UnShift(Download),
   Push(Download),
   Update(DownloadProgress),

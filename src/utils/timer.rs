@@ -7,7 +7,7 @@ use crate::utils::request_animation_frame;
 type TimerCallbacks = Rc<RefCell<Vec<Rc<RefCell<dyn FnMut()>>>>>;
 type RecursiveCallback = Rc<RefCell<Option<Closure<dyn FnMut()>>>>;
 
-pub struct Timer {
+pub(crate) struct Timer {
   callbacks: TimerCallbacks,
   is_running: Rc<RefCell<bool>>,
 }
