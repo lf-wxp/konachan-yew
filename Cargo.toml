@@ -12,9 +12,9 @@ safe = []
 
 [dependencies]
 bounce = "0.9.0"
-chrono = "0.4.33"
+chrono = "0.4.38"
 color-thief = "0.2.2"
-fake = {version = "2.9.2", features = ["derive", "uuid", "chrono"]}
+fake = {version = "2.10.0", features = ["derive", "uuid", "chrono"]}
 futures-util = "0.3.30"
 gloo-console = "0.3.0"
 gloo-events = "0.2.0"
@@ -22,18 +22,18 @@ gloo-net = "0.5.0"
 gloo-render = "0.2.0"
 gloo-timers = {version = "0.3.0", features = ["futures"]}
 gloo-utils = "0.2.0"
-indexmap = "2.2.1"
-js-sys = "0.3.67"
-lazy_static = "1.4.0"
+indexmap = "2.6.0"
+js-sys = "0.3.70"
+lazy_static = "1.5.0"
 nanoid = "0.4.0"
 rand = "0.8.5"
-serde = {version = "1.0.197", features = ["derive"]}
-serde_json = "1.0.115"
+serde = {version = "1.0.210", features = ["derive"]}
+serde_json = "1.0.128"
 stylist = {version = "0.13.0", features = ["yew_integration"]}
-tauri-sys = {git = "https://github.com/JonasKruckenberg/tauri-sys", features = ["all"]}
-wasm-bindgen = "0.2.90"
-wasm-bindgen-futures = "0.4.40"
-web-sys = {version = "0.3.67", features = [
+tauri-sys = {git = "https://github.com/JonasKruckenberg/tauri-sys", features = ["all"], branch = "v2"}
+wasm-bindgen = "0.2.93"
+wasm-bindgen-futures = "0.4.43"
+web-sys = {version = "0.3.70", features = [
   "Document",
   "Element",
   "HtmlElement",
@@ -54,7 +54,7 @@ web-sys = {version = "0.3.67", features = [
   "CssStyleDeclaration",
 ]}
 yew = {version = "0.21.0", features = ["csr"]}
-yew-hooks = "0.3.0"
+yew-hooks = "0.3.2"
 yew-i18n = "0.1.2"
 yew_icons = {version = "0.8.0", features = [
   "BootstrapSunFill",
@@ -62,5 +62,5 @@ yew_icons = {version = "0.8.0", features = [
   "FontAwesomeSolidDownload",
   "BootstrapCheckCircleFill",
   "BootstrapInfoCircleFill",
-  "FeatherRefreshCcw"
+  "FeatherRefreshCcw",
 ]}

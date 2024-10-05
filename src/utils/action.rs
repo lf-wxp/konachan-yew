@@ -1,8 +1,9 @@
 use futures_util::StreamExt;
+use gloo_console::log;
 use gloo_net::http::{Headers, Request};
 use js_sys::encode_uri;
+use tauri_sys::core;
 use tauri_sys::event::listen;
-use tauri_sys::tauri;
 
 use crate::{
   model::{
@@ -29,7 +30,7 @@ pub async fn fetch_action(params: FetchParams) -> Result<ImageRes, Error> {
   }
   #[cfg(feature = "tauri")]
   {
-    let json: ImageRes = tauri::invoke(&Action::GetPost.to_string(), &params).await?;
+    let json: ImageRes = core::invoke::<ImageRes>(&Action::GetPost.to_string(), &params).await;
     return Ok(json);
   }
   #[cfg(feature = "fake")]
@@ -57,13 +58,13 @@ pub async fn download_action(url: &str, name: &str) -> Result<(), Error> {
   }
   #[cfg(feature = "tauri")]
   {
-    tauri::invoke(
+    core::invoke::<()>(
       &Action::DownloadImage.to_string(),
       &DownloadParam {
         url: url.to_string(),
       },
     )
-    .await?;
+    .await;
     Ok(())
   }
 }
@@ -71,7 +72,7 @@ pub async fn download_action(url: &str, name: &str) -> Result<(), Error> {
 pub async fn close_splashscreen() -> Result<(), Error> {
   #[cfg(feature = "tauri")]
   {
-    tauri::invoke(&Action::CloseSplashscreen.to_string(), &Empty).await?;
+    core::invoke::<()>(&Action::CloseSplashscreen.to_string(), &Empty).await;
     return Ok(());
   }
   Ok(())
@@ -82,6 +83,7 @@ pub async fn listen_progress(callback: &dyn Fn(DownloadProgress)) {
   {
     let mut events = listen::<DownloadProgress>("progress").await.unwrap();
     while let Some(event) = events.next().await {
+      log!("progress", format!("{:?}", event.payload));
       callback(event.payload);
     }
   }
