@@ -123,20 +123,18 @@ pub fn Nav() -> Html {
   use_effect_once(move || {
     let window = get_window();
     let closure = Closure::<dyn Fn(_)>::new(move |e: KeyboardEvent| {
-      if let Some(target) = get_target::<KeyboardEvent, HtmlInputElement>(e.clone()) {
-        if target.tag_name().to_lowercase() == "input" {
-          return;
-        }
-        match e.key_code() {
-          37 => {
-            page_clone.dispatch(PageAction::Prev);
-          }
-          39 => {
-            page_clone.dispatch(PageAction::Next);
-          }
-          _ => (),
-        };
+      if let Some(_) = get_target::<KeyboardEvent, HtmlInputElement>(e.clone()) {
+        return;
       }
+      match e.key_code() {
+        37 => {
+          page_clone.dispatch(PageAction::Prev);
+        }
+        39 => {
+          page_clone.dispatch(PageAction::Next);
+        }
+        _ => (),
+      };
     });
     window
       .add_event_listener_with_callback("keydown", closure.as_ref().unchecked_ref())
