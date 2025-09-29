@@ -1,12 +1,13 @@
 use bounce::use_slice;
 use stylist::{self, style};
 use wasm_bindgen::{closure::Closure, JsCast};
+use web_sys::HtmlInputElement;
 use yew::prelude::*;
 use yew_hooks::use_effect_once;
 
 use crate::{
   store::{Page, PageAction},
-  utils::{get_window, style},
+  utils::{get_target, get_window, style},
 };
 
 const SIZE: u32 = 4;
@@ -52,6 +53,8 @@ pub fn Nav() -> Html {
   let class_name = get_class_name();
   let page = use_slice::<Page>();
   let page_vec = get_page_vec(page.current as u32, page.total as u32);
+  let page_val = use_state(|| 1);
+  let page_val_display = page_val.clone();
 
   let page_clone = page.clone();
   let next = Callback::from(move |_: MouseEvent| {
@@ -65,8 +68,29 @@ pub fn Nav() -> Html {
   let invoke = Callback::from(move |id: u32| {
     page_clone.dispatch(PageAction::Invoke(id as usize));
   });
-  let goto = Callback::from(move |_: MouseEvent| {});
-  let change = Callback::from(move |_: Event| {});
+  let page_clone = page.clone();
+  let page_val_clone = page_val.clone();
+  let goto = Callback::from(move |_: MouseEvent| {
+    page_clone.dispatch(PageAction::Invoke(*page_val_clone));
+  });
+
+  let page_val_clone = page_val.clone();
+  let change = Callback::from(move |e: InputEvent| {
+    if let Some(target) = get_target::<InputEvent, HtmlInputElement>(e) {
+      let value = target.value().parse::<usize>().unwrap_or_default();
+      page_val_clone.set(value);
+    }
+  });
+
+  let page_clone = page.clone();
+  let keypress = Callback::from(move |e: KeyboardEvent| {
+    match e.key_code() {
+      13 => {
+        page_clone.dispatch(PageAction::Invoke(*page_val));
+      }
+      _ => (),
+    };
+  });
 
   let bk_page = {
     let param = if !page_vec.is_empty() { "active" } else { "" };
@@ -99,15 +123,20 @@ pub fn Nav() -> Html {
   use_effect_once(move || {
     let window = get_window();
     let closure = Closure::<dyn Fn(_)>::new(move |e: KeyboardEvent| {
-      match e.key_code() {
-        37 => {
-          page_clone.dispatch(PageAction::Prev);
+      if let Some(target) = get_target::<KeyboardEvent, HtmlInputElement>(e.clone()) {
+        if target.tag_name().to_lowercase() == "input" {
+          return;
         }
-        39 => {
-          page_clone.dispatch(PageAction::Next);
-        }
-        _ => (),
-      };
+        match e.key_code() {
+          37 => {
+            page_clone.dispatch(PageAction::Prev);
+          }
+          39 => {
+            page_clone.dispatch(PageAction::Next);
+          }
+          _ => (),
+        };
+      }
     });
     window
       .add_event_listener_with_callback("keydown", closure.as_ref().unchecked_ref())
@@ -151,7 +180,7 @@ pub fn Nav() -> Html {
             })}
           </ul>
         </div>
-        <form class="bk-pager_go">
+        <div class="bk-pager_go">
           <em class="bk-pager_go-em" />
           <div class="bk-pager_go-div">
             <span class="bk-pager_go-span">{page.total}</span>
@@ -161,15 +190,15 @@ pub fn Nav() -> Html {
               class={"bk-pager_go-input animation"}
               type="text"
               placeholder="page"
-              name="pager"
-              value={page.current.to_string()}
-              onchange={change}
+              value={page_val_display.to_string()}
+              oninput={change}
+              onkeypress={keypress}
             />
           </div>
           <button class="bk-pager_btn" onclick={goto}>
             <span />
           </button>
-        </form>
+        </div>
         <div class="bk-pager_holder" />
       </div>
     </section>
