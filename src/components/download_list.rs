@@ -12,15 +12,16 @@ use crate::{
 pub fn DownloadList() -> Html {
   let class_name = get_class_name();
   let downloads = use_slice_value::<Downloads>();
-  let class = |status: ImageState| format!("bk-download-item {}", status);
+  let class = |status: &ImageState| format!("bk-download-item {}", status);
 
   html! {
     <section class={class_name}>
       <ul class="scroll-bar">
         {for downloads.value().iter().map(|item| {
+          let status = item.status.clone();
           html!{
-            <li class={class(item.status.clone())}>
-              <Progress status={item.status.clone()} percent={item.percent} image={item.preview.clone()} url={item.url.clone()}  />
+            <li class={class(&status)}>
+              <Progress status={status} percent={item.percent} image={item.preview.clone()} url={item.url.clone()}  />
             </li>
           }})
         }

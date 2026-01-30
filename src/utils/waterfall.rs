@@ -36,7 +36,7 @@ fn calc_column_width(mw: f64, mm: f64, w: f64) -> (usize, f64) {
   }
 }
 
-fn calc_column_array_pure(h: f64, col_array: &mut Vec<f64>) {
+fn calc_column_array_pure(h: f64, col_array: &mut [f64]) {
   if !col_array.is_empty() {
     let (_min, index) = shortest_column_pure(col_array);
     col_array[index] += h;
@@ -50,7 +50,7 @@ fn calc_position_pure(col_width: f64, col_array: &[f64]) -> (f64, f64) {
 
 fn calc_list_item_size(item: &Image, col_width: f64, cols: &[f64]) -> Image {
   let ratio = item.height / item.width;
-  let height = col_width * ratio as f64;
+  let height = col_width * ratio;
   let (x, y) = calc_position_pure(col_width, cols);
   Image {
     style_w: Some(col_width),
@@ -66,7 +66,7 @@ fn calc_list_item_size(item: &Image, col_width: f64, cols: &[f64]) -> Image {
 fn update_layout_pure(
   security: bool,
   col_width: f64,
-  col_array: &mut Vec<f64>,
+  col_array: &mut [f64],
   images: &[Image],
 ) -> Vec<Image> {
   let mut items = Vec::new();
@@ -101,6 +101,6 @@ pub fn calc_waterfall(params: WaterfallParams) -> Vec<Image> {
     images,
   } = params;
   let (column, col_width) = calc_column_width(max_width, min_width, width);
-  let mut col_array = vec![0.0 as f64; column];
+  let mut col_array = vec![0.0_f64; column];
   update_layout_pure(security, col_width, &mut col_array, &images)
 }

@@ -1,22 +1,23 @@
-use futures_util::StreamExt;
-use gloo_console::log;
+#[cfg(any(feature = "web", feature = "safe"))]
 use gloo_net::http::{Headers, Request};
-use js_sys::encode_uri;
-use tauri_sys::core;
-use tauri_sys::event::listen;
-
-use crate::{
-  model::{
-    Action, DownloadParam, DownloadProgress, Empty, Error, FetchParams, ImageData, ImageRes,
-  },
-  utils::download_file,
+#[cfg(feature = "tauri")]
+use {
+  crate::model::{Action, DownloadParam, DownloadProgress, Empty},
+  futures_util::StreamExt,
+  gloo_console::log,
+  tauri_sys::core,
+  tauri_sys::event::listen,
 };
+#[cfg(not(feature = "tauri"))]
+use {crate::model::DownloadProgress, crate::utils::download_file, js_sys::encode_uri};
 
-pub async fn fetch_action(params: FetchParams) -> Result<ImageRes, Error> {
+use crate::model::{Error, FetchParams, ImageRes};
+
+pub async fn fetch_action(_params: FetchParams) -> Result<ImageRes, Error> {
   #[cfg(any(feature = "web", feature = "safe"))]
   {
     let url = "/api/post";
-    let query = params.param();
+    let query = _params.param();
     let headers = Headers::new();
     headers.append("x-api-key", "konachan-api");
     headers.append("ContentType", "application/json");
@@ -26,39 +27,46 @@ pub async fn fetch_action(params: FetchParams) -> Result<ImageRes, Error> {
       .send()
       .await?;
     let json: ImageRes = resp.json().await?;
-    return Ok(json);
+    Ok(json)
   }
-  #[cfg(feature = "tauri")]
+
+  #[cfg(all(feature = "tauri", not(any(feature = "web", feature = "safe"))))]
   {
-    let json: ImageRes = core::invoke::<ImageRes>(&Action::GetPost.to_string(), &params).await;
-    return Ok(json);
+    let json: ImageRes = core::invoke::<ImageRes>(&Action::GetPost.to_string(), &_params).await;
+    Ok(json)
   }
-  #[cfg(feature = "fake")]
+
+  #[cfg(all(
+    feature = "fake",
+    not(any(feature = "web", feature = "safe")),
+    not(feature = "tauri")
+  ))]
   {
     let json_data = include_str!("../../static/mock/post.json");
     let json: ImageRes = serde_json::from_str(json_data)?;
-    return Ok(json);
+    Ok(json)
   }
-  Ok(ImageRes {
-    code: 0,
-    msg: None,
-    data: ImageData {
-      count: 0,
-      images: vec![],
-    },
-  })
+
+  #[cfg(not(any(feature = "web", feature = "safe", feature = "tauri", feature = "fake")))]
+  {
+    Err("No feature enabled. Please enable one of: web, safe, tauri, fake".into())
+  }
 }
 
-pub async fn download_action(url: &str, name: &str) -> Result<(), Error> {
+pub async fn download_action(
+  url: &str,
+  #[allow(unused_variables)] name: &str,
+) -> Result<(), Error> {
   #[cfg(not(feature = "tauri"))]
   {
     let url = format!("/api/image?url={}", encode_uri(url));
-    download_file(&url, name);
+    download_file(&url, name).map_err(|e| format!("{:?}", e))?;
     Ok(())
   }
+
   #[cfg(feature = "tauri")]
   {
-    core::invoke::<()>(
+    let _ = core::invoke::<()>(
       &Action::DownloadImage.to_string(),
       &DownloadParam {
         url: url.to_string(),
@@ -69,22 +77,28 @@ pub async fn download_action(url: &str, name: &str) -> Result<(), Error> {
   }
 }
 
+#[allow(dead_code)]
 pub async fn close_splashscreen() -> Result<(), Error> {
   #[cfg(feature = "tauri")]
   {
-    core::invoke::<()>(&Action::CloseSplashscreen.to_string(), &Empty).await;
-    return Ok(());
+    let _ = core::invoke::<()>(&Action::CloseSplashscreen.to_string(), &Empty).await;
   }
   Ok(())
 }
 
-pub async fn listen_progress(callback: &dyn Fn(DownloadProgress)) {
-  #[cfg(feature = "tauri")]
-  {
-    let mut events = listen::<DownloadProgress>("progress").await.unwrap();
-    while let Some(event) = events.next().await {
-      log!("progress", format!("{:?}", event.payload));
-      callback(event.payload);
-    }
+#[cfg(feature = "tauri")]
+pub async fn listen_progress(callback: &dyn Fn(DownloadProgress)) -> Result<(), Error> {
+  let mut events = listen::<DownloadProgress>("progress").await?;
+  while let Some(event) = events.next().await {
+    log!("progress", format!("{:?}", event.payload));
+    callback(event.payload);
   }
+  Ok(())
+}
+
+#[cfg(not(feature = "tauri"))]
+#[allow(dead_code)]
+pub async fn listen_progress(_callback: &dyn Fn(DownloadProgress)) -> Result<(), Error> {
+  // No-op for non-tauri builds
+  Ok(())
 }

@@ -1,8 +1,11 @@
+#![allow(unused_imports)]
+
 use color_thief::Color;
 use indexmap::{self, IndexMap};
 use js_sys::ArrayBuffer;
 use rand::{self, Rng};
 use std::ops::Range;
+#[allow(unused_imports)]
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use wasm_bindgen_futures::{spawn_local, JsFuture};
 use web_sys::{
@@ -15,9 +18,10 @@ use yew::{
 };
 
 pub fn random(rang: Range<u16>) -> u16 {
-  rand::thread_rng().gen_range(rang)
+  rand::rng().random_range(rang)
 }
 
+#[allow(dead_code)]
 pub fn num_in_range(start: f64, end: f64, num: f64) -> f64 {
   if num <= start {
     return start;
@@ -59,10 +63,12 @@ pub fn request_animation_frame(f: &Closure<dyn FnMut()>) {
     .expect("should register `requestAnimationFrame` OK");
 }
 
+#[allow(dead_code)]
 pub fn class_name_determine(condition: bool, name: &str, append: &str) -> String {
   format!("{} {}", name, if condition { append } else { "" })
 }
 
+#[allow(dead_code)]
 pub fn get_vnode_attr(vnode: VNode, attr: &str) -> String {
   match vnode {
     VNode::VTag(vtag) => vtag
@@ -74,6 +80,7 @@ pub fn get_vnode_attr(vnode: VNode, attr: &str) -> String {
   }
 }
 
+#[allow(dead_code)]
 pub fn append_vnode_attr(vnode: VNode, key: &'static str, val: String) -> VNode {
   let pre_val = get_vnode_attr(vnode.clone(), key);
 
@@ -95,6 +102,7 @@ pub fn append_vnode_attr(vnode: VNode, key: &'static str, val: String) -> VNode 
   }
 }
 
+#[allow(dead_code)]
 pub fn add_child(vnode: VNode, child: VNode) -> VNode {
   match vnode {
     VNode::VTag(mut vtag) => {
@@ -112,6 +120,7 @@ where
   e.as_ref().target().and_then(|t| t.dyn_into::<H>().ok())
 }
 
+#[allow(dead_code)]
 pub async fn read_file(file: web_sys::File) -> Result<js_sys::ArrayBuffer, JsValue> {
   let promise = js_sys::Promise::new(&mut |resolve, reject| {
     let file_reader = FileReader::new().unwrap();
@@ -134,14 +143,16 @@ pub async fn read_file(file: web_sys::File) -> Result<js_sys::ArrayBuffer, JsVal
   Ok(array_buffer)
 }
 
+#[allow(dead_code)]
 pub fn array_buffer_to_blob_url(
   array_buffer: &ArrayBuffer,
   mime_type: &str,
 ) -> Result<String, JsValue> {
   let array: js_sys::Array = js_sys::Array::new();
   array.push(array_buffer);
-  let blob =
-    Blob::new_with_u8_array_sequence_and_options(&array, BlobPropertyBag::new().type_(mime_type))?;
+  let bag = BlobPropertyBag::new();
+  bag.set_type(mime_type);
+  let blob = Blob::new_with_u8_array_sequence_and_options(&array, &bag)?;
 
   let url = Url::create_object_url_with_blob(&blob)?;
   Ok(url)
@@ -170,6 +181,7 @@ pub fn get_html_image_to_vec(img: HtmlImageElement) -> Result<Vec<u8>, JsValue> 
   Ok(img_data.data().to_vec())
 }
 
+#[allow(dead_code)]
 pub fn node_ref_to_html<T: JsCast>(node_ref: NodeRef) -> Option<T> {
   node_ref.get().and_then(|node| node.dyn_into::<T>().ok())
 }
@@ -179,10 +191,14 @@ pub fn bare_rgb(rgb: Color) -> String {
   format!("{r},{g},{b}")
 }
 
+#[cfg(not(feature = "tauri"))]
 pub fn download_file(url: &str, name: &str) -> Result<(), JsValue> {
   let document = get_document();
   let body = document.body().ok_or("get body error")?;
-  let a: HtmlAnchorElement = document.create_element("a").unwrap().dyn_into().unwrap();
+  let a: HtmlAnchorElement = document
+    .create_element("a")?
+    .dyn_into()
+    .map_err(|_| "Failed to convert element to anchor")?;
   a.set_href(url);
   a.set_download(name);
   a.set_target("_blank");
@@ -192,13 +208,14 @@ pub fn download_file(url: &str, name: &str) -> Result<(), JsValue> {
   Ok(())
 }
 
+#[cfg(not(feature = "tauri"))]
 pub fn register_ws() {
   let window = get_window();
   let closure = Closure::<dyn Fn(_)>::new(move |_: Event| {
     spawn_local(async move {
       let window = get_window();
-      let mut options = RegistrationOptions::new();
-      options.scope("/");
+      let options = RegistrationOptions::new();
+      options.set_scope("/");
       let _ = JsFuture::from(
         window
           .navigator()

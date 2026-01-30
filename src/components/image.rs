@@ -56,12 +56,16 @@ pub fn Image(props: &Props) -> Html {
       }
     })
   };
+  
+  let src = props.src.clone();
+  let style = props.style.clone();
+  
   html! {
     <div class={class_name}>
       <figure class={figure_class} style={figure_style}>
         <img
-          src={props.src.clone()}
-          style={props.style.clone()}
+          src={src}
+          style={style}
           class={class}
           onanimationend={onanimationend}
           onerror={onerror}

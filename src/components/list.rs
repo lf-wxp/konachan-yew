@@ -7,9 +7,11 @@ use yew_icons::{Icon, IconId};
 
 use crate::{
   components::Image,
-  store::{self, Download, DownloadAction, Downloads, FilterImages, ImageState, Size},
+  store::{self, Downloads, FilterImages, Size},
   utils::{download_action, style},
 };
+#[cfg(feature = "tauri")]
+use crate::store::{Download, DownloadAction, ImageState};
 
 #[function_component]
 pub fn List() -> Html {
@@ -29,18 +31,19 @@ pub fn List() -> Html {
 
   let download = Callback::from(move |item: store::Image| {
     let downloads = downloads.clone();
-    let store::Image { preview, url, .. } = item.clone();
+    let store::Image { preview: _, url, .. } = item.clone();
     if !downloads.value().iter().any(|x| x.url == url) {
       spawn_local(async move {
         #[cfg(feature = "tauri")]
         {
           downloads.dispatch(DownloadAction::UnShift(Download {
-            preview,
+            preview: item.preview.clone(),
             url,
             percent: 0.0,
             status: ImageState::Pending,
           }));
         }
+        #[allow(unused_variables)]
         let _ = download_action(&item.url, &item.name).await;
       });
     }
@@ -55,7 +58,7 @@ pub fn List() -> Html {
       <div class="bk-list__wrap scroll-bar" ref={node}>
       {for images.value().iter().enumerate().map(|(i, item)| {
         let ele = item.clone();
-        let ele_clone = item.clone();
+        let ele_for_click = item.clone();
         let width = ele.style_w.map_or(0.0, |x| x);
         let height = ele.style_h.map_or(0.0, |x| x);
         html!{
@@ -79,7 +82,7 @@ pub fn List() -> Html {
           </div>
           <span
             class="bk-list__down"
-            onclick={download.reform(move |_| ele_clone.clone())}
+            onclick={download.reform(move |_| ele_for_click.clone())}
           >
             <Icon icon_id={IconId::FontAwesomeSolidDownload}  width="1em" height="1em" />
           </span>

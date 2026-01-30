@@ -87,7 +87,7 @@ pub fn Progress(props: &Props) -> Html {
       if matches!(props.status, ImageState::Error) {
         <Icon
           class="retry"
-          icon_id={IconId::FeatherRefreshCcw}
+          icon_id={IconId::LucideRefreshCcw}
           width="1em"
           height="1em"
           onclick={retry.reform(move |_| url.clone())}

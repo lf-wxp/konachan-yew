@@ -15,7 +15,7 @@ pub fn use_listen_progress() {
   use_effect_with((), move |_| {
     let downloads_clone = downloads_clone.clone();
     spawn_local(async move {
-      listen_progress(&|data: DownloadProgress| {
+      let _ = listen_progress(&|data: DownloadProgress| {
         downloads_clone.dispatch(DownloadAction::Update(data));
       })
       .await;

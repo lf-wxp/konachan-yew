@@ -17,3 +17,4 @@ dist/
 dist_safe/
 
 .DS_Store
+.codebuddy

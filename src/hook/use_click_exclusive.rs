@@ -14,7 +14,7 @@ where
     if let Some(target) = target {
       let is_contain = class_set
         .iter()
-        .any(|x| target.closest(x).map_or(false, |x| x.is_some()));
+        .any(|x| target.closest(x).is_ok_and(|x| x.is_some()));
       if !is_contain {
         callback();
       }

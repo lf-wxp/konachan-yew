@@ -5,6 +5,7 @@ use yew::prelude::*;
 use super::Notify;
 
 #[derive(Debug, PartialEq, Eq, Clone)]
+#[allow(dead_code)]
 pub enum NoticeTag {
   Info,
   Success,

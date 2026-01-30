@@ -1,6 +1,6 @@
 use bounce::Atom;
 use bounce::{BounceStates, Selector};
-use rand::{seq::SliceRandom, thread_rng};
+use rand::{seq::SliceRandom, rng};
 use serde::{Deserialize, Serialize};
 use std::{
   fmt::{self, Display},
@@ -63,7 +63,7 @@ impl Images {
 
 impl From<Vec<Image>> for Images {
   fn from(mut value: Vec<Image>) -> Self {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     value.shuffle(&mut rng);
     Images(value)
   }

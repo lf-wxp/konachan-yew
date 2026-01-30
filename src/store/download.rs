@@ -8,26 +8,28 @@ use crate::model::DownloadProgress;
 use super::ImageState;
 
 #[derive(PartialEq, Clone, Serialize, Deserialize, Debug, Default)]
-pub(crate) struct Download {
+pub struct Download {
   pub preview: String,
   pub url: String,
   pub percent: f32,
   pub status: ImageState,
 }
 
-pub(crate) enum DownloadAction {
+#[allow(dead_code)]
+pub enum DownloadAction {
   UnShift(Download),
   Push(Download),
   Update(DownloadProgress),
 }
 
 #[derive(Slice, PartialEq, Clone, Debug, Default)]
-pub(crate) struct Downloads(pub Vec<Download>);
+pub struct Downloads(pub Vec<Download>);
 
 impl Downloads {
   pub fn value(&self) -> &Vec<Download> {
     &self.0
   }
+  #[allow(dead_code)]
   pub fn push(&mut self, item: Download) -> Self {
     let mut value = self.value().clone();
     value.push(item);

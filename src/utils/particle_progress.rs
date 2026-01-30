@@ -145,6 +145,7 @@ impl ParticleProgress {
         }
         if idx == current {
           let alpha = self.alpha.get();
+          #[allow(deprecated)]
           ctx.set_fill_style(&JsValue::from_str(&self.color));
           ctx.set_global_alpha(alpha);
           self.change_alpha();
@@ -180,8 +181,8 @@ impl ParticleProgress {
   }
 
   fn draw(&mut self) -> Result<(), JsValue> {
-    self.draw_particle().unwrap();
-    self.draw_full().unwrap();
+    self.draw_particle()?;
+    self.draw_full()?;
     Ok(())
   }
   fn subscribe(&self) {

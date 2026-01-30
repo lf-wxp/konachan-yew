@@ -11,7 +11,9 @@ use crate::{
 #[function_component]
 pub fn Notify() -> Html {
   let class_name = get_class_name();
-  let notice_list = use_context::<NoticeContext>().map_or(vec![], |x| x.0.clone());
+  let notice_list = use_context::<NoticeContext>()
+    .map(|x| x.0.clone())
+    .unwrap_or_default();
   let notify_remove = use_remove_notify();
 
   let class_fn = |item: Notice| {
@@ -28,13 +30,13 @@ pub fn Notify() -> Html {
     }
   });
 
-  let icon_id = |item: Notice| match item.tag {
+  let icon_id = |tag: NoticeTag| match tag {
     NoticeTag::Success => IconId::BootstrapCheckCircleFill,
     _ => IconId::BootstrapInfoCircleFill,
   };
 
-  let icon_class = |item: Notice| {
-    let theme = match item.tag {
+  let icon_class = |tag: NoticeTag| {
+    let theme = match tag {
       NoticeTag::Success => "success",
       NoticeTag::Danger => "danger",
       NoticeTag::Info => "info",
@@ -48,6 +50,7 @@ pub fn Notify() -> Html {
       <div class={class_name} >
         { for notice_list.iter().map(|item|{
           let notice = item.clone();
+          let tag = item.tag.clone();
           html!{
             <div
               key={item.id.clone()}
@@ -55,14 +58,15 @@ pub fn Notify() -> Html {
               onanimationend={remove_fn.reform(move |_| notice.clone())}
             >
               <Icon
-                icon_id={icon_id(item.clone())}
-                class={icon_class(item.clone())}
+                icon_id={icon_id(tag.clone())}
+                class={icon_class(tag)}
                 width="16px"
                 height="16px"
               />
               {item.content.clone()}
             </div>
-        }})}
+          }
+        })}
       </div>
     }
   }

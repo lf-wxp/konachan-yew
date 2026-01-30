@@ -2,6 +2,7 @@ use yew::prelude::*;
 use yew_hooks::use_event_with_window;
 
 #[derive(Clone, Copy, Debug)]
+#[allow(dead_code)]
 pub struct Movement {
   pub x: i32,
   pub y: i32,

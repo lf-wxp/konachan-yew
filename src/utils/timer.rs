@@ -38,6 +38,7 @@ impl Timer {
     *self.is_running.borrow_mut() = false;
   }
 
+  #[allow(dead_code)]
   pub fn destroy(&self) {
     self.stop();
   }
@@ -55,12 +56,16 @@ impl Timer {
           callback.borrow_mut()();
         }
         let closure = f.borrow();
-        let closure_ref = closure.as_ref().unwrap();
+        let closure_ref = closure
+          .as_ref()
+          .expect("closure is always Some in recursive callback");
         request_animation_frame(closure_ref);
       }
     }));
     let closure = g.borrow();
-    let closure_ref = closure.as_ref().unwrap();
+    let closure_ref = closure
+      .as_ref()
+      .expect("closure was just set above");
     request_animation_frame(closure_ref);
   }
 }

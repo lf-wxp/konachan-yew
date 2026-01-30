@@ -1,13 +1,17 @@
 use bounce::use_atom_setter;
-use gloo_timers::future::TimeoutFuture;
 use stylist::{self, style};
-use wasm_bindgen_futures::spawn_local;
 use web_sys::HtmlImageElement;
 use yew::{function_component, html, Callback, Event, Html};
 
 use crate::{
   store::ThemeColor,
-  utils::{bare_rgb, close_splashscreen, get_html_image_to_vec, get_target, random, style},
+  utils::{bare_rgb, get_html_image_to_vec, get_target, random, style},
+};
+#[cfg(feature = "tauri")]
+use {
+  gloo_timers::future::TimeoutFuture,
+  wasm_bindgen_futures::spawn_local,
+  crate::utils::close_splashscreen,
 };
 
 #[function_component]

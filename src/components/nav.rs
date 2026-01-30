@@ -84,12 +84,9 @@ pub fn Nav() -> Html {
 
   let page_clone = page.clone();
   let keypress = Callback::from(move |e: KeyboardEvent| {
-    match e.key_code() {
-      13 => {
-        page_clone.dispatch(PageAction::Invoke(*page_val));
-      }
-      _ => (),
-    };
+    if e.key_code() == 13 {
+      page_clone.dispatch(PageAction::Invoke(*page_val));
+    }
   });
 
   let bk_page = {
@@ -123,7 +120,7 @@ pub fn Nav() -> Html {
   use_effect_once(move || {
     let window = get_window();
     let closure = Closure::<dyn Fn(_)>::new(move |e: KeyboardEvent| {
-      if let Some(_) = get_target::<KeyboardEvent, HtmlInputElement>(e.clone()) {
+      if get_target::<KeyboardEvent, HtmlInputElement>(e.clone()).is_some() {
         return;
       }
       match e.key_code() {

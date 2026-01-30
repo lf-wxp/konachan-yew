@@ -16,6 +16,7 @@ pub(crate) struct Page {
 }
 
 impl Page {
+  #[allow(dead_code)]
   pub fn new(current: usize, total: usize) -> Self {
     Page { current, total }
   }

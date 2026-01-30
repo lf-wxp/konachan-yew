@@ -1,3 +1,12 @@
+//! Konachan - A modern web application for browsing and downloading images
+//!
+//! This is a Tauri and Web-based application that provides a beautiful interface
+//! for browsing Konachan image galleries with advanced features like:
+//! - Waterfall layout display
+//! - Download management
+//! - Dynamic wallpapers
+//! - Multi-language support (English and Chinese)
+
 use bounce::BounceRoot;
 use stylist::{self, style};
 use yew::prelude::*;
@@ -7,7 +16,9 @@ use components::{
   Background, DownloadList, DynamicWallpaper, List, Loader, Nav, NotifyProvider, Search, Service,
   Setting,
 };
-use utils::{register_ws, style, TRANSLATIONS};
+#[cfg(not(feature = "tauri"))]
+use utils::register_ws;
+use utils::{style, TRANSLATIONS};
 
 mod components;
 mod hook;

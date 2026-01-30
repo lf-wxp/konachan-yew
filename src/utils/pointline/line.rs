@@ -2,8 +2,8 @@ use super::Point;
 use rand::Rng;
 
 fn random_int_from_interval(mn: f32, mx: f32) -> f32 {
-  let mut rng = rand::thread_rng();
-  rng.gen_range(mn..=mx) as f32
+  let mut rng = rand::rng();
+  rng.random_range(mn..=mx) as f32
 }
 pub fn intersect_2_lines(l1: &Line, l2: &Line) -> Option<Point> {
   let p1 = &l1.a;

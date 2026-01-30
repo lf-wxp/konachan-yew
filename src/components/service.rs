@@ -5,11 +5,13 @@ use yew::{function_component, html, use_effect_with, Html};
 
 use crate::{
   components::{use_notify, NoticeTag},
-  hook::{use_i18n, use_listen_progress, use_theme},
+  hook::{use_i18n, use_theme},
   model::FetchParams,
   store::{Images, Loading, Mode, Page, PageAction, Refresh, Tags},
   utils::fetch_action,
 };
+#[cfg(feature = "tauri")]
+use crate::hook::use_listen_progress;
 
 #[function_component]
 pub fn Service() -> Html {
