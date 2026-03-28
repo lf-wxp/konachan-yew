@@ -3,18 +3,18 @@
 use color_thief::Color;
 use indexmap::{self, IndexMap};
 use js_sys::ArrayBuffer;
-use rand::{self, Rng};
+use rand::{self, RngExt};
 use std::ops::Range;
 #[allow(unused_imports)]
-use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
-use wasm_bindgen_futures::{spawn_local, JsFuture};
+use wasm_bindgen::{JsCast, JsValue, prelude::Closure};
+use wasm_bindgen_futures::{JsFuture, spawn_local};
 use web_sys::{
-  window, Blob, BlobPropertyBag, CanvasRenderingContext2d, Document, Event, FileReader,
-  HtmlAnchorElement, HtmlCanvasElement, HtmlImageElement, RegistrationOptions, Url, Window,
+  Blob, BlobPropertyBag, CanvasRenderingContext2d, Document, Event, FileReader, HtmlAnchorElement,
+  HtmlCanvasElement, HtmlImageElement, RegistrationOptions, Url, Window, window,
 };
 use yew::{
-  virtual_dom::{ApplyAttributeAs, Attributes, VNode},
   AttrValue, NodeRef,
+  virtual_dom::{AttributeOrProperty, Attributes, VNode},
 };
 
 pub fn random(rang: Range<u16>) -> u16 {
@@ -85,18 +85,16 @@ pub fn append_vnode_attr(vnode: VNode, key: &'static str, val: String) -> VNode 
   let pre_val = get_vnode_attr(vnode.clone(), key);
 
   match vnode {
-    VNode::VTag(mut vtag) => {
+    VNode::VTag(vtag) => {
+      let mut vtag = std::rc::Rc::try_unwrap(vtag).unwrap_or_else(|rc| (*rc).clone());
       let mut indexmap = IndexMap::new();
       indexmap.insert(
         AttrValue::from(key),
-        (
-          AttrValue::from(format!("{} {}", pre_val, val)),
-          ApplyAttributeAs::Attribute,
-        ),
+        AttributeOrProperty::Attribute(AttrValue::from(format!("{} {}", pre_val, val))),
       );
-      let attr = Attributes::IndexMap(indexmap);
+      let attr = Attributes::IndexMap(std::rc::Rc::new(indexmap));
       vtag.set_attributes(attr);
-      VNode::VTag(vtag)
+      VNode::VTag(std::rc::Rc::new(vtag))
     }
     _ => vnode.clone(),
   }
@@ -105,9 +103,10 @@ pub fn append_vnode_attr(vnode: VNode, key: &'static str, val: String) -> VNode 
 #[allow(dead_code)]
 pub fn add_child(vnode: VNode, child: VNode) -> VNode {
   match vnode {
-    VNode::VTag(mut vtag) => {
+    VNode::VTag(vtag) => {
+      let mut vtag = std::rc::Rc::try_unwrap(vtag).unwrap_or_else(|rc| (*rc).clone());
       vtag.add_child(child);
-      VNode::VTag(vtag)
+      VNode::VTag(std::rc::Rc::new(vtag))
     }
     _ => vnode.clone(),
   }

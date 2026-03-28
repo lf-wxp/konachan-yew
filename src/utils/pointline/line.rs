@@ -1,5 +1,5 @@
 use super::Point;
-use rand::Rng;
+use rand::RngExt;
 
 fn random_int_from_interval(mn: f32, mx: f32) -> f32 {
   let mut rng = rand::rng();

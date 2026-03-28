@@ -1,15 +1,15 @@
-use bounce::use_atom_value;
+use crate::store::use_atom_value;
 use std::{cell::RefCell, rc::Rc};
 use stylist::{self, style};
 use wasm_bindgen_futures::spawn_local;
 use web_sys::{HtmlCanvasElement, HtmlImageElement};
 use yew::prelude::*;
-use yew::{function_component, use_mut_ref, use_node_ref, Html};
-use yew_icons::{Icon, IconId};
+use yew::{Html, function_component, use_mut_ref, use_node_ref};
+use yew_icons::{Icon, IconData};
 
 use crate::{
   store::{ImageState, ThemeColor},
-  utils::{download_action, style, ParticleProgress},
+  utils::{ParticleProgress, download_action, style},
 };
 
 #[derive(Properties, PartialEq)]
@@ -47,24 +47,24 @@ pub fn Progress(props: &Props) -> Html {
   });
   let particle_progress_clone = particle_progress.clone();
   use_effect_with(props.status.clone(), move |status: &ImageState| {
-    if matches!(status, ImageState::Error) {
-      if let Some(progress) = &*particle_progress_clone.borrow() {
-        (*progress.borrow_mut()).stop();
-      }
+    if matches!(status, ImageState::Error)
+      && let Some(progress) = &*particle_progress_clone.borrow()
+    {
+      (*progress.borrow_mut()).stop();
     }
   });
   let onload = Callback::from(move |_: Event| {
-    if let Some(canvas) = canvas_ref_clone.cast::<HtmlCanvasElement>() {
-      if let Some(progress) = &*particle_progress.borrow() {
-        (*progress.borrow_mut()).set_canvas(canvas);
-      }
+    if let Some(canvas) = canvas_ref_clone.cast::<HtmlCanvasElement>()
+      && let Some(progress) = &*particle_progress.borrow()
+    {
+      (*progress.borrow_mut()).set_canvas(canvas);
     }
-    if let Some(img) = img_ref_clone.cast::<HtmlImageElement>() {
-      if let Some(progress) = &*particle_progress.borrow() {
-        (*progress.borrow_mut()).set_image(img);
-        (*progress.borrow_mut()).init();
-        (*progress.borrow_mut()).start();
-      }
+    if let Some(img) = img_ref_clone.cast::<HtmlImageElement>()
+      && let Some(progress) = &*particle_progress.borrow()
+    {
+      (*progress.borrow_mut()).set_image(img);
+      (*progress.borrow_mut()).init();
+      (*progress.borrow_mut()).start();
     }
   });
   let retry = {
@@ -81,20 +81,20 @@ pub fn Progress(props: &Props) -> Html {
   };
 
   html! {
-    <div class={class_name}>
-      <img src={props.image.clone()} onload={onload} ref={img_ref} />
-      <canvas ref={canvas_ref} />
-      if matches!(props.status, ImageState::Error) {
-        <Icon
-          class="retry"
-          icon_id={IconId::LucideRefreshCcw}
-          width="1em"
-          height="1em"
-          onclick={retry.reform(move |_| url.clone())}
-        />
-      }
-    </div>
-  }
+      <div class={class_name}>
+        <img src={props.image.clone()} onload={onload} ref={img_ref} />
+        <canvas ref={canvas_ref} />
+        if matches!(props.status, ImageState::Error) {
+  <Icon
+            class="retry"
+            data={IconData::LUCIDE_REFRESH_CCW}
+            width="1em"
+            height="1em"
+            onclick={retry.reform(move |_| url.clone())}
+          />
+        }
+      </div>
+    }
 }
 
 #[allow(non_upper_case_globals)]

@@ -7,10 +7,8 @@
 //! - Dynamic wallpapers
 //! - Multi-language support (English and Chinese)
 
-use bounce::BounceRoot;
 use stylist::{self, style};
 use yew::prelude::*;
-use yew_i18n::I18nProvider;
 
 use components::{
   Background, DownloadList, DynamicWallpaper, List, Loader, Nav, NotifyProvider, Search, Service,
@@ -18,7 +16,9 @@ use components::{
 };
 #[cfg(not(feature = "tauri"))]
 use utils::register_ws;
-use utils::{style, TRANSLATIONS};
+use utils::{I18nProvider, TRANSLATIONS, style};
+
+use crate::store::BounceRoot;
 
 mod components;
 mod hook;

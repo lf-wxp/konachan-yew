@@ -1,17 +1,17 @@
-use bounce::{use_atom_setter, use_selector_value, use_slice};
+use crate::store::{use_atom_setter, use_selector_value, use_slice};
 use stylist::{self, style};
 use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;
 use yew_hooks::use_size;
-use yew_icons::{Icon, IconId};
+use yew_icons::{Icon, IconData};
 
+#[cfg(feature = "tauri")]
+use crate::store::{Download, DownloadAction, ImageState};
 use crate::{
   components::Image,
   store::{self, Downloads, FilterImages, Size},
   utils::{download_action, style},
 };
-#[cfg(feature = "tauri")]
-use crate::store::{Download, DownloadAction, ImageState};
 
 #[function_component]
 pub fn List() -> Html {
@@ -22,6 +22,19 @@ pub fn List() -> Html {
   let node = use_node_ref();
   let (width, _h) = use_size(node.clone());
 
+  // Use window width as fallback when container width is 0
+  // This breaks the circular dependency: container needs content for size,
+  // but content needs size for layout
+  let window_width = use_state(|| {
+    web_sys::window()
+      .map(|w| w.inner_width().ok())
+      .flatten()
+      .map(|v| v.as_f64().unwrap_or(0.0) as u32)
+      .unwrap_or(0)
+  });
+
+  let actual_width = if width > 0 { width } else { *window_width };
+
   let animation_delay = |i: usize| -> String { format!("animation-delay: {}s", i as f32 * 0.2) };
 
   let combine_style = |style: Option<String>, i: usize| -> String {
@@ -31,8 +44,10 @@ pub fn List() -> Html {
 
   let download = Callback::from(move |item: store::Image| {
     let downloads = downloads.clone();
-    let store::Image { preview: _, url, .. } = item.clone();
-    if !downloads.value().iter().any(|x| x.url == url) {
+    let store::Image {
+      preview: _, url, ..
+    } = item.clone();
+    if !downloads.value().value().iter().any(|x| x.url == url) {
       spawn_local(async move {
         #[cfg(feature = "tauri")]
         {
@@ -49,48 +64,50 @@ pub fn List() -> Html {
     }
   });
 
-  use_effect_with(width, move |val: &u32| {
-    size(Size::new(*val as f64));
+  use_effect_with(actual_width, move |val: &u32| {
+    if *val > 0 {
+      size.emit(Size::new(*val as f64));
+    }
   });
 
   html! {
-    <section class={class_name}>
-      <div class="bk-list__wrap scroll-bar" ref={node}>
-      {for images.value().iter().enumerate().map(|(i, item)| {
-        let ele = item.clone();
-        let ele_for_click = item.clone();
-        let width = ele.style_w.map_or(0.0, |x| x);
-        let height = ele.style_h.map_or(0.0, |x| x);
-        html!{
-          <figure
-            style={combine_style(ele.style, i)}
-            key={ele.id}
-            class={"bk-list__item"}
-          >
-          <Image
-            alternative={Some("/image/error.png")}
-            class_name="bk-list__img"
-            width={width}
-            height={height}
-            style={animation_delay(i)}
-            src={ele.preview}
-          />
-          <div class="bk-list__tool">
-            <p class="bk-list__info">
-              {ele.width} {" / "} {ele.height}
-            </p>
-          </div>
-          <span
-            class="bk-list__down"
-            onclick={download.reform(move |_| ele_for_click.clone())}
-          >
-            <Icon icon_id={IconId::FontAwesomeSolidDownload}  width="1em" height="1em" />
-          </span>
-          </figure>
-        }})}
-      </div>
-    </section>
-  }
+      <section class={class_name}>
+        <div class="bk-list__wrap scroll-bar" ref={node}>
+        {for images.value().iter().enumerate().map(|(i, item)| {
+          let ele = item.clone();
+          let ele_for_click = item.clone();
+          let width = ele.style_w.map_or(0.0, |x| x);
+          let height = ele.style_h.map_or(0.0, |x| x);
+          html!{
+            <figure
+              style={combine_style(ele.style, i)}
+              key={ele.id}
+              class={"bk-list__item"}
+            >
+            <Image
+              alternative={Some("/image/error.png")}
+              class_name="bk-list__img"
+              width={width}
+              height={height}
+              style={animation_delay(i)}
+              src={ele.preview}
+            />
+            <div class="bk-list__tool">
+              <p class="bk-list__info">
+                {ele.width} {" / "} {ele.height}
+              </p>
+            </div>
+            <span
+              class="bk-list__down"
+              onclick={download.reform(move |_| ele_for_click.clone())}
+            >
+  <Icon data={IconData::FONT_AWESOME_SOLID_DOWNLOAD}  width="1em" height="1em" />
+            </span>
+            </figure>
+          }})}
+        </div>
+      </section>
+    }
 }
 
 #[allow(non_upper_case_globals)]

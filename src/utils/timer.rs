@@ -63,9 +63,7 @@ impl Timer {
       }
     }));
     let closure = g.borrow();
-    let closure_ref = closure
-      .as_ref()
-      .expect("closure was just set above");
+    let closure_ref = closure.as_ref().expect("closure was just set above");
     request_animation_frame(closure_ref);
   }
 }

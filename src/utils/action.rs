@@ -1,5 +1,7 @@
 #[cfg(any(feature = "web", feature = "safe"))]
 use gloo_net::http::{Headers, Request};
+#[cfg(not(feature = "tauri"))]
+use {crate::model::DownloadProgress, crate::utils::download_file, js_sys::encode_uri};
 #[cfg(feature = "tauri")]
 use {
   crate::model::{Action, DownloadParam, DownloadProgress, Empty},
@@ -8,8 +10,6 @@ use {
   tauri_sys::core,
   tauri_sys::event::listen,
 };
-#[cfg(not(feature = "tauri"))]
-use {crate::model::DownloadProgress, crate::utils::download_file, js_sys::encode_uri};
 
 use crate::model::{Error, FetchParams, ImageRes};
 

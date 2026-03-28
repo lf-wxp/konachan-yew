@@ -1,10 +1,10 @@
 use stylist::{self, style};
 use yew::prelude::*;
-use yew_icons::{Icon, IconId};
+use yew_icons::{Icon, IconData};
 
 use super::NoticeContext;
 use crate::{
-  components::{use_remove_notify, Notice, NoticeState, NoticeTag},
+  components::{Notice, NoticeState, NoticeTag, use_remove_notify},
   utils::style,
 };
 
@@ -31,8 +31,8 @@ pub fn Notify() -> Html {
   });
 
   let icon_id = |tag: NoticeTag| match tag {
-    NoticeTag::Success => IconId::BootstrapCheckCircleFill,
-    _ => IconId::BootstrapInfoCircleFill,
+    NoticeTag::Success => IconData::BOOTSTRAP_CHECK_CIRCLE_FILL,
+    _ => IconData::BOOTSTRAP_INFO_CIRCLE_FILL,
   };
 
   let icon_class = |tag: NoticeTag| {
@@ -46,30 +46,30 @@ pub fn Notify() -> Html {
   };
 
   html! {
-    if notice_list.iter().len() > 0 {
-      <div class={class_name} >
-        { for notice_list.iter().map(|item|{
-          let notice = item.clone();
-          let tag = item.tag.clone();
-          html!{
-            <div
-              key={item.id.clone()}
-              class={class_fn(item.clone())}
-              onanimationend={remove_fn.reform(move |_| notice.clone())}
-            >
-              <Icon
-                icon_id={icon_id(tag.clone())}
-                class={icon_class(tag)}
-                width="16px"
-                height="16px"
-              />
-              {item.content.clone()}
-            </div>
-          }
-        })}
-      </div>
+      if notice_list.iter().len() > 0 {
+        <div class={class_name} >
+          { for notice_list.iter().map(|item|{
+            let notice = item.clone();
+            let tag = item.tag.clone();
+            html!{
+              <div
+                key={item.id.clone()}
+                class={class_fn(item.clone())}
+                onanimationend={remove_fn.reform(move |_| notice.clone())}
+              >
+  <Icon
+                  data={icon_id(tag.clone())}
+                  class={icon_class(tag)}
+                  width="16px"
+                  height="16px"
+                />
+                {item.content.clone()}
+              </div>
+            }
+          })}
+        </div>
+      }
     }
-  }
 }
 
 #[allow(non_upper_case_globals)]

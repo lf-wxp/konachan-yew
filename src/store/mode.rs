@@ -1,15 +1,17 @@
-use bounce::Atom;
+use super::Atom;
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
 
 use super::Invertible;
 
-#[derive(Atom, PartialEq, Serialize, Deserialize, Default, Clone, Debug)]
+#[derive(PartialEq, Serialize, Deserialize, Default, Clone, Debug)]
 pub(crate) enum Mode {
   #[default]
   Json,
   Xml,
 }
+
+impl Atom for Mode {}
 
 impl Display for Mode {
   fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {

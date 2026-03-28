@@ -1,8 +1,10 @@
 use fake::{
+  Dummy, Fake,
   faker::name::raw::FirstName,
   locales::{EN, ZH_CN},
-  Dummy, Fake,
 };
+use rand::RngExt;
+
 pub(crate) struct RandomName;
 impl Dummy<RandomName> for String {
   fn dummy_with_rng<R: rand::Rng + ?Sized>(_config: &RandomName, rng: &mut R) -> Self {

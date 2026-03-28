@@ -1,7 +1,7 @@
-use bounce::use_atom_setter;
+use crate::store::use_atom_setter;
 use stylist::{self, style};
 use web_sys::HtmlImageElement;
-use yew::{function_component, html, Callback, Event, Html};
+use yew::{Callback, Event, Html, function_component, html};
 
 use crate::{
   store::ThemeColor,
@@ -9,9 +9,8 @@ use crate::{
 };
 #[cfg(feature = "tauri")]
 use {
-  gloo_timers::future::TimeoutFuture,
+  crate::utils::close_splashscreen, gloo_timers::future::TimeoutFuture,
   wasm_bindgen_futures::spawn_local,
-  crate::utils::close_splashscreen,
 };
 
 #[function_component]
@@ -28,7 +27,7 @@ pub fn Background() -> Html {
       let theme = colors[0];
       let primary = colors[1];
       let ancillary = colors[2];
-      theme_color(ThemeColor::new(
+      theme_color.emit(ThemeColor::new(
         bare_rgb(theme),
         bare_rgb(primary),
         bare_rgb(ancillary),

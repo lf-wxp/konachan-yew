@@ -1,11 +1,13 @@
-use bounce::Atom;
+use super::Atom;
 
-#[derive(Atom, PartialEq, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub(crate) struct ThemeColor {
   pub theme_color: String,
   pub primary_color: String,
   pub ancillary_color: String,
 }
+
+impl Atom for ThemeColor {}
 
 impl ThemeColor {
   pub fn new(theme: String, primary: String, ancillary: String) -> ThemeColor {
@@ -21,7 +23,9 @@ impl ThemeColor {
       primary_color,
       ancillary_color,
     } = self;
-    format!("--theme-base-color: rgb({theme_color});--theme-base-color-rgb: {theme_color};--theme-primary-color: rgb({primary_color});--theme-ancillary-color: rgb({ancillary_color});")
+    format!(
+      "--theme-base-color: rgb({theme_color});--theme-base-color-rgb: {theme_color};--theme-primary-color: rgb({primary_color});--theme-ancillary-color: rgb({ancillary_color});"
+    )
   }
   pub fn get_color(&self) -> (String, String, String) {
     let ThemeColor {

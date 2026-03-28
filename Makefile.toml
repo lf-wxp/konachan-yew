@@ -1,0 +1,70 @@
+[config]
+skip_core_tasks = true
+
+[tasks.format]
+description = "Format code with rustfmt"
+command = "cargo"
+args = ["fmt"]
+
+[tasks.clippy]
+description = "Run clippy with zero warnings requirement"
+command = "cargo"
+args = ["clippy", "--", "-D", "warnings"]
+
+[tasks.check]
+description = "Check code formatting and linting"
+dependencies = ["format", "clippy"]
+
+[tasks.build]
+description = "Build the project"
+command = "cargo"
+args = ["build"]
+
+[tasks.build-release]
+description = "Build the project in release mode"
+command = "cargo"
+args = ["build", "--release"]
+
+[tasks.dev-web]
+description = "Run trunk dev server"
+command = "trunk"
+args = ["serve", "--features", "web"]
+
+[tasks.dev-safe]
+description = "Run trunk dev server with safe config"
+command = "trunk"
+args = ["serve", "--config", "Trunk.safe.toml"]
+
+[tasks.dev-fake]
+description = "Run trunk dev server"
+command = "trunk"
+args = ["serve", "--features", "fake"]
+
+[tasks.clean]
+description = "Clean build artifacts"
+command = "cargo"
+args = ["clean"]
+
+[tasks.test]
+description = "Run tests"
+command = "cargo"
+args = ["test"]
+
+[tasks.docker-build]
+description = "Build Docker image"
+command = "docker"
+args = ["build", "-t", "konachan-yew:latest", "."]
+
+[tasks.docker-run]
+description = "Run Docker container on port 8080"
+command = "docker"
+args = ["run", "--rm", "-p", "8080:80", "--name", "konachan-yew", "konachan-yew:latest"]
+
+[tasks.docker-stop]
+description = "Stop running Docker container"
+command = "docker"
+args = ["stop", "konachan-yew"]
+
+[tasks.default]
+description = "Default task - format and check"
+dependencies = ["check"]

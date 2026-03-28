@@ -1,7 +1,7 @@
 //! Macro for creating store types with default values
 //!
 //! This macro creates a newtype wrapper around an inner type, implementing
-//! common traits like `Default`, `Display`, `Clone`, `PartialEq`, and `bounce::Atom`.
+//! common traits like `Default`, `Display`, `Clone`, `PartialEq`, and `Atom`.
 
 /// Creates a new store type with the specified name, inner type, and default value.
 ///
@@ -19,8 +19,10 @@
 #[macro_export]
 macro_rules! create_store {
   ($name:ident, $inner_type:ty, $default_value:expr) => {
-    #[derive(PartialEq, bounce::Atom, Clone)]
-    pub struct $name($inner_type);
+    #[derive(PartialEq, Clone)]
+    pub struct $name(pub $inner_type);
+
+    impl $crate::store::Atom for $name {}
 
     impl $name {
       #[allow(dead_code)]

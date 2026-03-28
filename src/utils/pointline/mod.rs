@@ -1,12 +1,11 @@
-
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use wasm_bindgen::{closure::Closure, JsCast, JsValue};
+use wasm_bindgen::{JsCast, JsValue, closure::Closure};
 use web_sys::HtmlCanvasElement;
 use yew::Event;
 
-use crate::utils::{get_ctx, get_dpr, get_window, Timer};
+use crate::utils::{Timer, get_ctx, get_dpr, get_window};
 
 use line::{Flag, Line, intersect_2_lines};
 use point::Point;
@@ -142,5 +141,5 @@ impl PointLine {
   }
 }
 
-pub mod point;
 pub mod line;
+pub mod point;

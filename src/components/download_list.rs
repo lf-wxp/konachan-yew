@@ -1,4 +1,4 @@
-use bounce::use_slice_value;
+use crate::store::use_slice_value;
 use stylist::{self, style};
 use yew::prelude::*;
 

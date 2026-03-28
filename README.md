@@ -13,7 +13,7 @@ then
 
 ```bash
 cargo install trunk
-trunk server --features fake
+trunk serve --features fake
 ``` 
 
 # Reference

@@ -3,7 +3,7 @@ use std::rc::Rc;
 use wasm_bindgen::JsValue;
 use web_sys::{HtmlCanvasElement, HtmlImageElement};
 
-use crate::utils::{get_ctx, get_dpr, Timer};
+use crate::utils::{Timer, get_ctx, get_dpr};
 
 const ROW: u8 = 9;
 const COLUMN: u8 = 16;

@@ -1,4 +1,4 @@
-use bounce::{use_atom_setter, use_slice};
+use crate::store::{use_atom_setter, use_slice};
 use stylist::{self, style};
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
@@ -27,7 +27,7 @@ pub fn Search() -> Html {
     Callback::from(move |_: KeyboardEvent| {
       page.dispatch(PageAction::Total(0));
       page.dispatch(PageAction::Invoke(1));
-      tags(Tags::new((*value_clone).clone()));
+      tags.emit(Tags::new((*value_clone).clone()));
     })
   };
 

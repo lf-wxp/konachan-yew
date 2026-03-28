@@ -1,13 +1,12 @@
-use bounce::Atom;
-use bounce::{BounceStates, Selector};
-use rand::{seq::SliceRandom, rng};
+use super::{Atom, BounceStates, Selector};
+use rand::{rng, seq::SliceRandom};
 use serde::{Deserialize, Serialize};
 use std::{
   fmt::{self, Display},
   rc::Rc,
 };
 
-use crate::utils::{calc_waterfall, WaterfallParams};
+use crate::utils::{WaterfallParams, calc_waterfall};
 
 use super::{Security, Size};
 
@@ -52,8 +51,10 @@ pub(crate) struct Image {
   pub full: Option<bool>,
 }
 
-#[derive(Atom, PartialEq, Clone, Debug, Default)]
+#[derive(PartialEq, Clone, Debug, Default)]
 pub(crate) struct Images(pub Vec<Image>);
+
+impl Atom for Images {}
 
 impl Images {
   pub fn value(&self) -> &Vec<Image> {
@@ -69,8 +70,8 @@ impl From<Vec<Image>> for Images {
   }
 }
 
-#[derive(Atom, PartialEq, Clone, Debug, Default)]
-pub(crate) struct FilterImages(Vec<Image>);
+#[derive(PartialEq, Clone, Debug, Default)]
+pub(crate) struct FilterImages(pub Vec<Image>);
 
 impl Selector for FilterImages {
   fn select(states: &BounceStates) -> Rc<Self> {

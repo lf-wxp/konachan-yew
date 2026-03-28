@@ -1,4 +1,4 @@
-use bounce::use_atom_value;
+use crate::store::use_atom_value;
 use stylist::{self, style};
 use yew::prelude::*;
 

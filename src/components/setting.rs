@@ -1,4 +1,4 @@
-use bounce::{use_atom, use_atom_value};
+use crate::store::{use_atom, use_atom_value};
 use stylist::{self, style};
 use yew::prelude::*;
 
@@ -10,10 +10,10 @@ use crate::{
 #[function_component]
 pub fn Setting() -> Html {
   let class_name = get_class_name();
-  let security = use_atom::<Security>();
+  let (security, security_setter) = use_atom::<Security>();
   let loading = use_atom_value::<Loading>();
-  let refresh = use_atom::<Refresh>();
-  let mode = use_atom::<Mode>();
+  let (refresh, refresh_setter) = use_atom::<Refresh>();
+  let (mode, mode_setter) = use_atom::<Mode>();
 
   let active_class = format!(
     "bk-setting__security animation {}",
@@ -25,16 +25,19 @@ pub fn Setting() -> Html {
   );
   let mode_class = format!("bk-mode {}", *mode);
 
+  let security_clone = security.clone();
   let security_click = Callback::from(move |_: MouseEvent| {
-    security.set(security.invert());
+    security_setter.emit(security_clone.invert());
   });
 
+  let mode_clone = mode.clone();
   let mode_click = Callback::from(move |_: MouseEvent| {
-    mode.set(mode.invert());
+    mode_setter.emit(mode_clone.invert());
   });
 
+  let refresh_clone = refresh.clone();
   let refresh_click = Callback::from(move |_: MouseEvent| {
-    refresh.set(refresh.invert());
+    refresh_setter.emit(refresh_clone.invert());
   });
 
   #[cfg(feature = "tauri")]

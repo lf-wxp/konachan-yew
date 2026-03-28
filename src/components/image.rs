@@ -49,17 +49,17 @@ pub fn Image(props: &Props) -> Html {
     let state = state.clone();
     Callback::from(move |e: Event| {
       state.set(ImageState::Error);
-      if let Some(target) = get_target::<Event, HtmlImageElement>(e) {
-        if let Some(src) = &alternative {
-          target.set_src(src);
-        }
+      if let Some(target) = get_target::<Event, HtmlImageElement>(e)
+        && let Some(src) = &alternative
+      {
+        target.set_src(src);
       }
     })
   };
-  
+
   let src = props.src.clone();
   let style = props.style.clone();
-  
+
   html! {
     <div class={class_name}>
       <figure class={figure_class} style={figure_style}>

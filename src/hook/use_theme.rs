@@ -1,4 +1,4 @@
-use bounce::use_atom_value;
+use crate::store::use_atom_value;
 use web_sys::HtmlElement;
 use yew::prelude::*;
 

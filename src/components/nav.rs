@@ -1,6 +1,6 @@
-use bounce::use_slice;
+use crate::store::use_slice;
 use stylist::{self, style};
-use wasm_bindgen::{closure::Closure, JsCast};
+use wasm_bindgen::{JsCast, closure::Closure};
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 use yew_hooks::use_effect_once;
@@ -52,7 +52,7 @@ fn get_page_vec(page: u32, pages: u32) -> Vec<u32> {
 pub fn Nav() -> Html {
   let class_name = get_class_name();
   let page = use_slice::<Page>();
-  let page_vec = get_page_vec(page.current as u32, page.total as u32);
+  let page_vec = get_page_vec(page.value.current as u32, page.value.total as u32);
   let page_val = use_state(|| 1);
   let page_val_display = page_val.clone();
 
@@ -95,24 +95,28 @@ pub fn Nav() -> Html {
   };
 
   let bk_page_nav_prev = {
-    let result = page.current.saturating_sub(1);
+    let result = page.value.current.saturating_sub(1);
     let param = if result > 0 { "" } else { "disabled" };
     format!("bk-pager_nav {}", param)
   };
 
   let bk_page_nav_next = {
-    let result = page.total.saturating_sub(page.current);
+    let result = page.value.total.saturating_sub(page.value.current);
     let param = if result > 0 { "" } else { "disabled" };
     format!("bk-pager_nav {}", param)
   };
 
   let bk_page_item = |item: &u32| -> String {
-    let current = if page.current == (*item) as usize {
+    let current = if page.value.current == (*item) as usize {
       "current"
     } else {
       ""
     };
-    let size = if page.current >= 102 { "middle" } else { "" };
+    let size = if page.value.current >= 102 {
+      "middle"
+    } else {
+      ""
+    };
     format!("bk-pager_item {} {}", current, size)
   };
 
@@ -178,7 +182,7 @@ pub fn Nav() -> Html {
         <div class="bk-pager_go">
           <em class="bk-pager_go-em" />
           <div class="bk-pager_go-div">
-            <span class="bk-pager_go-span">{page.total}</span>
+            <span class="bk-pager_go-span">{page.value.total}</span>
           </div>
           <div class="bk-pager_go-div">
             <input

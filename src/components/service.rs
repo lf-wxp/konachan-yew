@@ -1,17 +1,17 @@
-use bounce::{use_atom_setter, use_atom_value, use_slice_dispatch, use_slice_value};
+use crate::store::{use_atom_setter, use_atom_value, use_slice_dispatch, use_slice_value};
 use std::rc::Rc;
 use wasm_bindgen_futures::spawn_local;
-use yew::{function_component, html, use_effect_with, Html};
+use yew::{Html, function_component, html, use_effect_with};
 
+#[cfg(feature = "tauri")]
+use crate::hook::use_listen_progress;
 use crate::{
-  components::{use_notify, NoticeTag},
+  components::{NoticeTag, use_notify},
   hook::{use_i18n, use_theme},
   model::FetchParams,
   store::{Images, Loading, Mode, Page, PageAction, Refresh, Tags},
   utils::fetch_action,
 };
-#[cfg(feature = "tauri")]
-use crate::hook::use_listen_progress;
 
 #[function_component]
 pub fn Service() -> Html {
@@ -37,17 +37,18 @@ pub fn Service() -> Html {
       let current = *current;
       let tags = (**tags).clone();
       let mode = (**mode).clone();
-      loading_handle(Loading::new(true));
+      loading_handle.emit(Loading::new(true));
       spawn_local(async move {
         let result =
           fetch_action(FetchParams::new(current as u32, tags.value().clone(), mode)).await;
-        loading_handle(Loading::new(false));
+        loading_handle.emit(Loading::new(false));
         match result {
           Ok(res) => {
-            images_handle(Images::from(res.data.images));
-            page_dispatch(PageAction::Total(res.data.count));
+            images_handle.emit(Images::from(res.data.images));
+            page_dispatch.emit(PageAction::Total(res.data.count));
           }
-          Err(_) => {
+          Err(e) => {
+            web_sys::console::log_1(&format!("[Service] Error: {:?}", e).into());
             notify(i18n.t("get list error"), NoticeTag::Danger, Some(3));
           }
         };

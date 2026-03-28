@@ -1,13 +1,13 @@
 use std::{cell::RefCell, rc::Rc};
 
-use bounce::use_atom_value;
+use crate::store::use_atom_value;
 use stylist::{self, style};
 use web_sys::HtmlCanvasElement;
-use yew::{function_component, html, use_effect_with, use_mut_ref, use_node_ref, Html};
+use yew::{Html, function_component, html, use_effect_with, use_mut_ref, use_node_ref};
 
 use crate::{
   store::ThemeColor,
-  utils::{style, PointLine},
+  utils::{PointLine, style},
 };
 
 #[function_component]
@@ -27,11 +27,11 @@ pub fn DynamicWallpaper() -> Html {
 
   let point_line_clone = point_line.clone();
   use_effect_with((), move |_| {
-    if let Some(canvas) = canvas_ref_clone.cast::<HtmlCanvasElement>() {
-      if let Some(point_line) = &*point_line_clone.borrow() {
-        (*point_line.borrow_mut()).set_canvas(canvas);
-        (*point_line.borrow_mut()).init();
-      }
+    if let Some(canvas) = canvas_ref_clone.cast::<HtmlCanvasElement>()
+      && let Some(point_line) = &*point_line_clone.borrow()
+    {
+      (*point_line.borrow_mut()).set_canvas(canvas);
+      (*point_line.borrow_mut()).init();
     }
   });
 
