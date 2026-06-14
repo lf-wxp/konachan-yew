@@ -15,11 +15,19 @@
   A modern, fast, and beautiful web frontend for <a href="https://konachan.net/">Konachan</a>, built with Rust and WebAssembly using the <a href="https://yew.rs/">Yew</a> framework.
 </p>
 
+<p align="center">
+  <a href="./README.zh-CN.md">中文文档</a>
+</p>
+
+---
+
 ## 📖 Overview
 
 **konachan-yew** is a high-performance single-page application (SPA) that provides an enhanced browsing experience for Konachan image boards. Leveraging the power of Rust and WebAssembly, it delivers lightning-fast performance with a modern UI.
 
 This repository contains the **web frontend only**. The backend API server that supplies image data can be found at [konachan-api](https://github.com/lf-wxp/konachan-api).
+
+---
 
 ## ✨ Features
 
@@ -36,6 +44,8 @@ This repository contains the **web frontend only**. The backend API server that 
 | 📱 **Responsive** | Works seamlessly on desktop and mobile devices |
 | 🐳 **Docker Ready** | One-command deployment with Docker |
 
+---
+
 ## 🛠️ Technology Stack
 
 - **Framework**: [Yew 0.23.0](https://yew.rs/) - Modern Rust framework for creating multi-threaded front-end web apps with WebAssembly
@@ -47,6 +57,8 @@ This repository contains the **web frontend only**. The backend API server that 
   - [gloo](https://github.com/rustwasm/gloo) - Collection of WASM-friendly utilities
 - **Build Tool**: [Trunk](https://trunkrs.dev/) - WASM web application bundler
 - **Desktop (Optional)**: [Tauri](https://tauri.app/) - Build smaller, faster, and more secure desktop applications
+
+---
 
 ## 🚀 Quick Start
 
@@ -123,6 +135,8 @@ cargo make test
 # Clean build artifacts
 cargo make clean
 ```
+
+---
 
 ## 📦 Production Build
 
@@ -209,6 +223,8 @@ cargo make docker-stop
 docker stop konachan-yew
 ```
 
+---
+
 ## 📁 Project Structure
 
 ```
@@ -234,9 +250,13 @@ konachan-yew/
 └── Makefile.toml       # cargo-make tasks
 ```
 
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+### Contributing Steps
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -251,9 +271,13 @@ This project follows:
 - [Airbnb CSS Style Guide](https://github.com/airbnb/css)
 - All code is formatted with `rustfmt` and linted with `clippy`
 
+---
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
 
 ## 🔗 Related Projects
 
@@ -262,11 +286,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 | [konachan-api](https://github.com/lf-wxp/konachan-api) | Backend API server for Konachan image data |
 | [konachan-tauri](https://github.com/lf-wxp/konachan-tauri) | Desktop application version using Tauri framework |
 
+---
+
 ## 🙏 Acknowledgments
 
 - [Konachan](https://konachan.net/) for providing the image board API
 - [Yew](https://yew.rs/) team for the amazing Rust/WASM framework
 - All contributors who have helped with this project
+
+---
 
 ## 📧 Contact
 
