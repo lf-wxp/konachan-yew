@@ -4,8 +4,13 @@
 FROM rust:1.94-bookworm AS builder
 
 # Install wasm target and trunk
+# `--locked` pins trunk's deps (avoids the cssparser/lightningcss type mismatch).
+# LTO is disabled to keep peak memory low: trunk's fat-LTO link step can OOM
+# inside memory-constrained build environments (Docker Desktop / CI runners).
 RUN rustup target add wasm32-unknown-unknown \
-    && cargo install trunk --version 0.21.14
+    && CARGO_PROFILE_RELEASE_LTO=off \
+       CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16 \
+       cargo install --locked trunk --version 0.21.14
 
 # Install system dependencies for sass compilation
 RUN apt-get update && apt-get install -y --no-install-recommends \
