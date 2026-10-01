@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  一个现代、快速、美观的 <a href="https://konachan.net/">Konachan</a> 网页前端，使用 Rust 和 WebAssembly 基于 <a href="https://yew.rs/">Yew</a> 框架构建。
+  一个现代、快速、美观的 <a href="https://konachan.com/">Konachan</a> 网页前端，使用 Rust 和 WebAssembly 基于 <a href="https://yew.rs/">Yew</a> 框架构建。
 </p>
 
 <p align="center">
@@ -290,7 +290,7 @@ konachan-yew/
 
 ## 🙏 致谢
 
-- [Konachan](https://konachan.net/) 提供图片板 API
+- [Konachan](https://konachan.com/) 提供图片板 API
 - [Yew](https://yew.rs/) 团队提供出色的 Rust/WASM 框架
 - 所有为这个项目提供帮助的贡献者
 

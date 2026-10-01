@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  A modern, fast, and beautiful web frontend for <a href="https://konachan.net/">Konachan</a>, built with Rust and WebAssembly using the <a href="https://yew.rs/">Yew</a> framework.
+  A modern, fast, and beautiful web frontend for <a href="https://konachan.com/">Konachan</a>, built with Rust and WebAssembly using the <a href="https://yew.rs/">Yew</a> framework.
 </p>
 
 <p align="center">
@@ -290,7 +290,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- [Konachan](https://konachan.net/) for providing the image board API
+- [Konachan](https://konachan.com/) for providing the image board API
 - [Yew](https://yew.rs/) team for the amazing Rust/WASM framework
 - All contributors who have helped with this project
 
