@@ -4,7 +4,7 @@ use yew::prelude::*;
 
 use crate::{
   store::{Invertible, Loading, Mode, Refresh, Security},
-  utils::style,
+  utils::{is_safe, style},
 };
 
 #[function_component]
@@ -45,14 +45,13 @@ pub fn Setting() -> Html {
   #[cfg(not(feature = "tauri"))]
   const IS_TAURI: bool = false;
 
-  #[cfg(feature = "safe")]
-  const IS_SAFE: bool = true;
-  #[cfg(not(feature = "safe"))]
-  const IS_SAFE: bool = false;
+  // Safe mode is resolved at runtime (see `utils::config`) so a single build
+  // can be served in both regular and content-filtered mode.
+  let is_safe = is_safe();
 
   html! {
     <section class={class_name}>
-      if !IS_SAFE {
+      if !is_safe {
         <article class={active_class}>
           <label class="bk-setting__toggle" onclick={security_click}>
             <span class="bk-setting__fake animation" />

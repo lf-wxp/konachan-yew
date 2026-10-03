@@ -1,4 +1,5 @@
 pub mod action;
+pub mod config;
 pub mod faker;
 pub mod i18n;
 pub mod particle_progress;
@@ -10,6 +11,7 @@ pub mod waterfall;
 #[macro_use]
 pub(crate) mod create_store;
 pub(crate) use action::*;
+pub(crate) use config::*;
 pub(crate) use i18n::*;
 pub(crate) use particle_progress::*;
 pub(crate) use pointline::*;

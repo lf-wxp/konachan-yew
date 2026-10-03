@@ -83,7 +83,7 @@
 | 标志 | 描述 |
 |------|------|
 | `fake` | 使用模拟数据开发，无需后端 |
-| `safe` | 安全模式构建，输出到 `dist_safe` 目录 |
+| `safe` | 安全模式的编译期默认值（可在运行时覆盖，见下文） |
 | `web` | 生产环境网页构建，带 API 代理 |
 | `tauri` | 启用 Tauri 集成以构建桌面应用 |
 
@@ -99,7 +99,7 @@ trunk serve --features fake
 trunk serve --features web
 
 # 使用安全模式配置的开发服务器
-trunk serve --config Trunk.safe.toml
+trunk serve --features safe --config Trunk.safe.toml
 ```
 
 #### 使用 cargo-make（推荐）
@@ -169,6 +169,28 @@ cargo make docker-run
 # 或直接运行
 docker run --rm -p 8080:80 --name konachan-yew konachan-yew:latest
 ```
+
+#### 运行时配置（一个镜像，两种模式）
+
+镜像只需用 `web` 特性构建一次。安全模式（始终过滤敏感内容并隐藏切换开关）
+通过 **容器启动时** 的 `KONACHAN_SAFE` 环境变量选择，因此无需为每种模式分别构建
+镜像：
+
+```bash
+# 普通模式（默认）
+docker run --rm -p 8080:80 -e KONACHAN_SAFE=false konachan-yew:latest
+
+# 安全模式
+docker run --rm -p 8080:80 -e KONACHAN_SAFE=true konachan-yew:latest
+```
+
+容器启动时，nginx 入口脚本会重新生成 `/config.js`，WASM 包在渲染前通过
+`window.__KONACHAN_CONFIG__` 读取它。可识别的真值为 `true`、`1`、`yes` 和
+`on`；其他值（或未设置）表示普通模式。该机制同样适用于任意静态托管，只需修改
+`dist/config.js` 即可。
+
+本地开发时 `/config.js` 为空对象，因此仍由编译期的 `safe` 特性
+（`cargo make dev-safe`）决定模式。
 
 #### Docker 架构
 
@@ -241,7 +263,8 @@ konachan-yew/
 │   ├── font/           # 字体文件
 │   ├── image/          # 图片资源
 │   ├── mock/           # 开发用的模拟数据
-│   └── script/         # JavaScript 工具
+│   └── script/         # JavaScript 工具（含运行时 config.js）
+├── docker/             # 容器入口脚本
 ├── dist/               # 构建输出（生产环境）
 ├── Cargo.toml          # Rust 依赖
 ├── Trunk.toml          # Trunk 配置

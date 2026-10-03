@@ -60,6 +60,13 @@ server {
     gzip_types application/wasm application/javascript text/css text/html image/svg+xml;
     gzip_min_length 256;
 
+    # Runtime configuration is rewritten on container start, so it must never
+    # be cached (exact match takes precedence over the asset regex below).
+    location = /config.js {
+        add_header Cache-Control "no-store, must-revalidate";
+        expires -1;
+    }
+
     # Cache static assets aggressively
     location ~* \.(wasm|js|css|svg|png|jpg|jpeg|gif|ico|woff|woff2|ttf)$ {
         expires 1y;
@@ -84,6 +91,12 @@ EOF
 
 # Copy built static files from builder
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Regenerate the runtime config from environment variables on container start
+# (e.g. `docker run -e KONACHAN_SAFE=true ...`), so one image can serve both
+# the regular and the safe mode.
+COPY docker/30-konachan-config.sh /docker-entrypoint.d/30-konachan-config.sh
+RUN chmod +x /docker-entrypoint.d/30-konachan-config.sh
 
 EXPOSE 80
 

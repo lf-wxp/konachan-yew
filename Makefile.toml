@@ -31,9 +31,9 @@ command = "trunk"
 args = ["serve", "--features", "web"]
 
 [tasks.dev-safe]
-description = "Run trunk dev server with safe config"
+description = "Run trunk dev server with safe mode enabled"
 command = "trunk"
-args = ["serve", "--config", "Trunk.safe.toml"]
+args = ["serve", "--features", "safe", "--config", "Trunk.safe.toml"]
 
 [tasks.dev-fake]
 description = "Run trunk dev server"
@@ -56,9 +56,34 @@ command = "docker"
 args = ["build", "-t", "konachan-yew:latest", "."]
 
 [tasks.docker-run]
-description = "Run Docker container on port 8080"
+description = "Run Docker container on port 8080 (regular mode)"
 command = "docker"
-args = ["run", "--rm", "-p", "8080:80", "--name", "konachan-yew", "konachan-yew:latest"]
+args = [
+  "run",
+  "--rm",
+  "-p",
+  "8080:80",
+  "-e",
+  "KONACHAN_SAFE=false",
+  "--name",
+  "konachan-yew",
+  "konachan-yew:latest",
+]
+
+[tasks.docker-run-safe]
+description = "Run Docker container on port 8080 in safe mode"
+command = "docker"
+args = [
+  "run",
+  "--rm",
+  "-p",
+  "8080:80",
+  "-e",
+  "KONACHAN_SAFE=true",
+  "--name",
+  "konachan-yew-safe",
+  "konachan-yew:latest",
+]
 
 [tasks.docker-stop]
 description = "Stop running Docker container"

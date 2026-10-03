@@ -83,7 +83,7 @@ This repository contains the **web frontend only**. The backend API server that 
 | Flag | Description |
 |------|-------------|
 | `fake` | Use mock data for development without a backend |
-| `safe` | Safe mode build, outputs to `dist_safe` directory |
+| `safe` | Compile-time default for safe mode (runtime-overridable, see below) |
 | `web` | Production web build with API proxy |
 | `tauri` | Enable Tauri integration for desktop builds |
 
@@ -170,6 +170,29 @@ cargo make docker-run
 docker run --rm -p 8080:80 --name konachan-yew konachan-yew:latest
 ```
 
+#### Runtime Configuration (one image, two modes)
+
+The image is built once with the `web` feature. Safe mode (sensitive content is
+always filtered and the toggle is hidden) is selected at **container start**
+through the `KONACHAN_SAFE` environment variable, so there is no need to build a
+separate image per mode:
+
+```bash
+# Regular mode (default)
+docker run --rm -p 8080:80 -e KONACHAN_SAFE=false konachan-yew:latest
+
+# Safe mode
+docker run --rm -p 8080:80 -e KONACHAN_SAFE=true konachan-yew:latest
+```
+
+On startup the nginx entrypoint regenerates `/config.js`, which the WASM bundle
+reads from `window.__KONACHAN_CONFIG__` before rendering. Accepted truthy values
+are `true`, `1`, `yes` and `on`; anything else (or unset) means regular mode.
+The same mechanism works on any static host - just edit `dist/config.js`.
+
+During local development `/config.js` is an empty object, so the compile-time
+`safe` feature (`cargo make dev-safe`) still decides the mode.
+
 #### Docker Architecture
 
 The Dockerfile uses a **multi-stage build**:
@@ -241,7 +264,8 @@ konachan-yew/
 │   ├── font/           # Font files
 │   ├── image/          # Image assets
 │   ├── mock/           # Mock data for development
-│   └── script/         # JavaScript utilities
+│   └── script/         # JavaScript utilities (incl. runtime config.js)
+├── docker/             # Container entrypoint hooks
 ├── dist/               # Build output (production)
 ├── Cargo.toml          # Rust dependencies
 ├── Trunk.toml          # Trunk configuration

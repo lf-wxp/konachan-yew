@@ -39,6 +39,14 @@
 			href="/static/script/sw.js"
 			data-target-path="./"
 		/>
+		<link
+			rel="copy-file"
+			data-trunk
+			href="/static/script/config.js"
+			data-target-path="./"
+		/>
+		<!-- Loaded before the WASM bundle so runtime flags are available at boot. -->
+		<script src="/config.js"></script>
 	</head>
 	<body dir="ltr"></body>
 </html>
