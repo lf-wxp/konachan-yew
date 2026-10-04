@@ -84,7 +84,7 @@
 |------|------|
 | `fake` | 使用模拟数据开发，无需后端 |
 | `safe` | 安全模式的编译期默认值（可在运行时覆盖，见下文） |
-| `web` | 生产环境网页构建，带 API 代理 |
+| `web` | 生产环境网页构建（调用同源 `/api/`） |
 | `tauri` | 启用 Tauri 集成以构建桌面应用 |
 
 ### 开发
@@ -203,36 +203,22 @@ nginx 配置包括：
 - 对 WASM、JS、CSS 和 SVG 启用 Gzip 压缩
 - 静态资源激进缓存（1 年，不可变）
 - SPA 回退（所有路由都返回 `index.html`）
-- 反向代理：`/api/*` → `http://backend:8000/`
+- 永不缓存的 `/config.js`，用于运行时配置
 
-#### 后端服务设置
+#### API 路由
 
-nginx 配置将对 `/api/` 的请求代理到 `http://backend:8000/`。使用 **Docker Compose** 来连接前端和后端：
+镜像只提供静态文件，**不会**代理 `/api/` 请求。前端访问的是自身源下的
+`/api/*`，因此需要由部署环境负责把这些请求路由到后端——可以使用上游反向代理、
+Ingress 规则或网关：
 
-```yaml
-version: "3.8"
-
-services:
-  frontend:
-    build: .
-    ports:
-      - "8080:80"
-    depends_on:
-      - backend
-
-  backend:
-    image: your-backend-image:latest
-    # 或者：build: ./path-to-backend
-    ports:
-      - "8000:8000"
-```
-
-或者手动创建 Docker 网络：
-
-```bash
-docker network create app-net
-docker run -d --name backend --network app-net your-backend-image
-docker run -d --name frontend --network app-net -p 8080:80 konachan-yew:latest
+```nginx
+location /api/ {
+    proxy_pass http://backend:8000/;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
 ```
 
 #### 停止容器

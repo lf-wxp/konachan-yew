@@ -84,7 +84,7 @@ This repository contains the **web frontend only**. The backend API server that 
 |------|-------------|
 | `fake` | Use mock data for development without a backend |
 | `safe` | Compile-time default for safe mode (runtime-overridable, see below) |
-| `web` | Production web build with API proxy |
+| `web` | Production web build (calls the same-origin `/api/`) |
 | `tauri` | Enable Tauri integration for desktop builds |
 
 ### Development
@@ -204,36 +204,23 @@ The nginx configuration includes:
 - Gzip compression for WASM, JS, CSS, and SVG
 - Aggressive caching for static assets (1 year, immutable)
 - SPA fallback (all routes serve `index.html`)
-- Reverse proxy: `/api/*` → `http://backend:8000/`
+- A never-cached `/config.js` for the runtime configuration
 
-#### Backend Service Setup
+#### API Routing
 
-The nginx config proxies `/api/` requests to `http://backend:8000/`. Use **Docker Compose** to connect frontend and backend:
+The image serves static files only and does **not** proxy `/api/` requests. The
+frontend calls `/api/*` on its own origin, so the surrounding deployment is
+responsible for routing those calls to the backend - use an upstream reverse
+proxy, an ingress rule or a gateway:
 
-```yaml
-version: "3.8"
-
-services:
-  frontend:
-    build: .
-    ports:
-      - "8080:80"
-    depends_on:
-      - backend
-
-  backend:
-    image: your-backend-image:latest
-    # Or: build: ./path-to-backend
-    ports:
-      - "8000:8000"
-```
-
-Or use a manual Docker network:
-
-```bash
-docker network create app-net
-docker run -d --name backend --network app-net your-backend-image
-docker run -d --name frontend --network app-net -p 8080:80 konachan-yew:latest
+```nginx
+location /api/ {
+    proxy_pass http://backend:8000/;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
 ```
 
 #### Stop the container
